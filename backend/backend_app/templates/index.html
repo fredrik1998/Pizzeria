@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>NEW PROJECT: backend</title>
+</head>
+<body>
+	<h1>Welcome to your new project: backend</h1>
+	<p><button onclick="Fetcher.fetcher('fetcher', {hello: 'world'});">Click here for asynchronous post</button></p>
+	<p><h3>Check out the Bootstrap Templates below to add to your project</h3></p>
+	<p><label>The HTML, CSS AND JS for these are located in the TEMPLATES AND STATIC folders</label></p> 
+	<p><a href="{{ url_for('bootstrap', bs_page='album') }}"><b>Album</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='blog') }}"><b>Blog</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='carousel') }}"><b>Carousel</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='cheatsheet') }}"><b>Cheatsheet</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='checkout') }}"><b>Checkout</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='cover') }}"><b>Cover</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='dashboard') }}"><b>Dashboard</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='grid') }}"><b>Grid</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='headers') }}"><b>Headers</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='heroes') }}"><b>Heroes</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='jumbotron') }}"><b>Jumbotron</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='masonry') }}"><b>Masonry</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='navbars') }}"><b>Navbars</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='navbar_bottom') }}"><b>Navbar Bottom</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='navbar_top_fixed') }}"><b>Navbar Top Fixed</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='navbar_top_static') }}"><b>Navbar Top Static</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='pricing') }}"><b>Pricing</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='product') }}"><b>Product</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='sidebars') }}"><b>Sidebars</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='sign_in') }}"><b>Sign In</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='starter_template') }}"><b>Starter Template</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='sticky_footer') }}"><b>Sticky Footer</b></a></p>
+	<p><a href="{{ url_for('bootstrap', bs_page='sticky_footer_navbar') }}"><b>Sticky Footer Navbar</b></a></p>
+	<script src="{{ url_for('static', filename='js/fetcher.js') }}"></script>
+</body>
+</html>
