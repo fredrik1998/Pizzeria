@@ -3,10 +3,10 @@ import { StyledNav, StyledNavLink } from './NavbarElements'
  const Navbar = () => {
   return (
     <StyledNav>
-      <StyledNavLink>Menu</StyledNavLink>
+      <StyledNavLink to='/menu'>Menu</StyledNavLink>
       <StyledNavLink>About us</StyledNavLink>
       <StyledNavLink>Contact</StyledNavLink>
-      <StyledNavLink>Order</StyledNavLink>
+      <StyledNavLink to='/order'>Order</StyledNavLink>
     </StyledNav>
   )
 }
