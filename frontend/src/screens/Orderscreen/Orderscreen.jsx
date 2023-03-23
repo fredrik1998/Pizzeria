@@ -43,6 +43,7 @@ const Orderscreen = () => {
                             <StyledTextContainer>
                                 <StyledH1>{item.name}</StyledH1>
                                 <StyledPrice>${item.price}</StyledPrice>
+                                <StyledPrice>{item.countInStock}</StyledPrice>
                             </StyledTextContainer>
                             <StyledTextButtonContainer>
                                 <StyledButton onClick={() => addToCart(item)}>Add to cart</StyledButton>

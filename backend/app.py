@@ -38,10 +38,11 @@ class Menu(db.Model):
     toppings = db.Column(db.String(128))
     description = db.Column(db.String(128))
     price = db.Column(db.Integer)
+    countInStock = db.Column(db.Integer)
 
     @staticmethod
-    def create_pizza(image_path, name, category, size, toppings, description, price):
-        pizza = Menu(image_path=image_path, name=name, category=category, size=size, toppings=toppings, description=description, price=price)
+    def create_pizza(image_path, name, category, size, toppings, description, price, countInStock):
+        pizza = Menu(image_path=image_path, name=name, category=category, size=size, toppings=toppings, description=description, price=price, countInStock=countInStock)
         db.session.add(pizza)
         db.session.commit()
 
@@ -52,16 +53,16 @@ def create_table():
 
 def create_pizzas():
     if not Menu.query.first():
-        Menu.create_pizza(image_path='margarita.jpg', name='Margherita', category='Pizza', size='Medium', toppings='Tomatoes, basil, mozzarella', description='Classic Italian pizza with tomato sauce, mozzarella cheese, and basil', price=10)
-        Menu.create_pizza(image_path='pepperoni.jpg', name='Pepperoni', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, pepperoni', description='Pizza with tomato sauce, mozarella cheese and pepperoni', price=11)
-        Menu.create_pizza(image_path='hawaii.webp', name='Hawaii', category='Pizza', size='Medium',toppings='Tomato sauce, mozzarella, ham, pineapple', description='Pizza with tomato sauce, mozarella cheese, ham and pineapple', price=11)
-        Menu.create_pizza(image_path='Vegetarian.jpg', name='Vegetarian', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, mushrooms, olives, peppers', description='Delicious Vegetarian pizza with tomato sauce, mozarella cheese, mushrooms, olives and peppers', price=11)
-        Menu.create_pizza(image_path='seafood.jpg', name='Seafood', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, shrimp, crab, tuna', description='Delicious seafood pizza with tomato sauce, mozarella cheese, fresh shrimp, crab and tuna', price=12)
-        Menu.create_pizza(image_path='pizza.jpg', name='Carbonara', category='Pizza' , size='Medium', toppings='Tomato sauce, mozzarella, bacon, egg', description='Italian pizza with tomato sauce, mozarella cheese, bacon and egg', price=12)
-        Menu.create_pizza(image_path='quattrostagoni.jpg', name='Quattro Stagioni', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, artichokes, olives', description='Classic Italian pizza based of the four seasons with tomato sauce, mozarella cheese, ham, mushrooms, artichokes and olives', price=12)
+        Menu.create_pizza(image_path='margarita.jpg', name='Margherita', category='Pizza', size='Medium', toppings='Tomatoes, basil, mozzarella', description='Classic Italian pizza with tomato sauce, mozzarella cheese, and basil', price=10, countInStock=10)
+        Menu.create_pizza(image_path='pepperoni.jpg', name='Pepperoni', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, pepperoni', description='Pizza with tomato sauce, mozarella cheese and pepperoni', price=11, countInStock=10)
+        Menu.create_pizza(image_path='hawaii.webp', name='Hawaii', category='Pizza', size='Medium',toppings='Tomato sauce, mozzarella, ham, pineapple', description='Pizza with tomato sauce, mozarella cheese, ham and pineapple', price=11, countInStock=10)
+        Menu.create_pizza(image_path='Vegetarian.jpg', name='Vegetarian', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, mushrooms, olives, peppers', description='Delicious Vegetarian pizza with tomato sauce, mozarella cheese, mushrooms, olives and peppers', price=11, countInStock=10)
+        Menu.create_pizza(image_path='seafood.jpg', name='Seafood', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, shrimp, crab, tuna', description='Delicious seafood pizza with tomato sauce, mozarella cheese, fresh shrimp, crab and tuna', price=12, countInStock=10)
+        Menu.create_pizza(image_path='pizza.jpg', name='Carbonara', category='Pizza' , size='Medium', toppings='Tomato sauce, mozzarella, bacon, egg', description='Italian pizza with tomato sauce, mozarella cheese, bacon and egg', price=12, countInStock=10)
+        Menu.create_pizza(image_path='quattrostagoni.jpg', name='Quattro Stagioni', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, artichokes, olives', description='Classic Italian pizza based of the four seasons with tomato sauce, mozarella cheese, ham, mushrooms, artichokes and olives', price=12, countInStock=10)
         Menu.create_pizza(image_path='pizza.webp', name='Quattro Formaggi', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, gorgonzola, parmesan, emmental', description='Classic Italian pizza with four cheeses with tomato sauce, mozarella, gorgonzola, parmesan, emmental', price=12)
-        Menu.create_pizza(image_path='Napoli.webp', name='Napoli', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, anchovies, capers', description='Italian pizza with tomato sauce, mozarella cheese, anchovies and capers', price=13)
-        Menu.create_pizza(image_path='Calzone.jpg', name='Calzone', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, peppers', description='Classic folded Italian pizza with tomato sauce, mozarella cheese, ham, mushrooms and peppers', price=13)
+        Menu.create_pizza(image_path='Napoli.webp', name='Napoli', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, anchovies, capers', description='Italian pizza with tomato sauce, mozarella cheese, anchovies and capers', price=13, countInStock=10)
+        Menu.create_pizza(image_path='Calzone.jpg', name='Calzone', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, peppers', description='Classic folded Italian pizza with tomato sauce, mozarella cheese, ham, mushrooms and peppers', price=13, countInStock=10)
     
 
 @app.route('/api/menu', methods=['GET'])
@@ -76,7 +77,8 @@ def get_menu():
             "size": pizza.size,
             "toppings": pizza.toppings,
             "description": pizza.description,
-            "price": pizza.price
+            "price": pizza.price,
+            "countInStock": pizza.countInStock,
         })
     return jsonify(menu_dict)
 
