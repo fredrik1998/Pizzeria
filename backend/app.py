@@ -2,7 +2,7 @@ import os
 from flask import *
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-
+from flask import request
 file_path = os.path.abspath(os.getcwd())+"\database.db"
  
 
@@ -65,6 +65,21 @@ def create_pizzas():
         Menu.create_pizza(image_path='Calzone.jpg', name='Calzone', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, peppers', description='Classic folded Italian pizza with tomato sauce, mozarella cheese, ham, mushrooms and peppers', price=13, countInStock=10)
     
 
+class Order(db.Model):
+    __tablename__ = "orders"
+    id = db.Column(db.Integer, primary_key=True)
+    customer_name = db.Column(db.String(128))
+    customer_email = db.Column(db.String(128))
+    customer_phone = db.Column(db.String(128))
+    items = db.Column(db.String(1024))
+    total_price = db.Column(db.Integer)
+
+    @staticmethod
+    def create_order(customer_name, customer_email, customer_phone, items, total_price):
+        order = Order(customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items, total_price=total_price)
+        db.session.add(order)
+        db.session.commit()
+
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
     pizzas = Menu.query.all()
@@ -82,6 +97,77 @@ def get_menu():
         })
     return jsonify(menu_dict)
 
+
+@app.route('/api/menu/<int:id>', methods=['GET'])
+def get_pizza_by_id(id):
+    pizza = Menu.query.get_or_404(id)
+    pizza_dict = {
+        "id": pizza.id,
+        "image_path": pizza.image_path.replace("/static/images/", ""),
+        "name": pizza.name,
+        "category": pizza.category,
+        "size": pizza.size,
+        "toppings": pizza.toppings,
+        "description": pizza.description,
+        "price": pizza.price,
+        "countInStock": pizza.countInStock,
+    }
+    return jsonify(pizza_dict)
+
+from flask import request
+
+@app.route('/api/menu/add', methods=['POST'])
+def add_pizza():
+    new_pizza = Menu(
+        image_path=request.json['image_path'],
+        name=request.json['name'],
+        category=request.json['category'],
+        size=request.json['size'],
+        toppings=request.json['toppings'],
+        description=request.json['description'],
+        price=request.json['price'],
+        countInStock=request.json['countInStock']
+    )
+    
+    db.session.add(new_pizza)
+    db.session.commit()
+    
+    pizza_dict = {
+        "id": new_pizza.id,
+        "image_path": new_pizza.image_path.replace("/static/images/", ""),
+        "name": new_pizza.name,
+        "category": new_pizza.category,
+        "size": new_pizza.size,
+        "toppings": new_pizza.toppings,
+        "description": new_pizza.description,
+        "price": new_pizza.price,
+        "countInStock": new_pizza.countInStock,
+    }
+    return jsonify(pizza_dict), 201
+
+@app.route('/api/menu/delete/<int:id>', methods=['DELETE'])
+def delete_pizza(id):
+    pizza = Menu.query.get_or_404(id)
+    
+    db.session.delete(pizza)
+    db.session.commit()
+    
+    return jsonify({"message": f"Pizza with ID {id} was deleted successfully."}), 200
+
+@app.route('/api/order/add', methods=['POST'])
+def add_order():
+    customer_name = request.json['customer_name']
+    customer_email = request.json['customer_email']
+    customer_phone = request.json['customer_phone']
+    items = request.json['items']
+    total_price = request.json['total_price']
+    for item in items:
+        pizza = Menu.query.get(item['id'])
+        pizza.countInStock -= item['quantity']
+        db.session.add(pizza) # add pizza object to session for updating
+    db.session.commit() # commit all changes to the database
+    Order.create_order(customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items, total_price=total_price)
+    return jsonify({"message": "Order created successfully."}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
