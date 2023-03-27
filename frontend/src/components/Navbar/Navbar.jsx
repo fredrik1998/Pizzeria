@@ -5,7 +5,7 @@ import { StyledNav, StyledNavLink } from './NavbarElements'
     <StyledNav>
       <StyledNavLink to='/menu'>Menu</StyledNavLink>
       <StyledNavLink>About us</StyledNavLink>
-      <StyledNavLink>Contact</StyledNavLink>
+      <StyledNavLink to='/login'>Login</StyledNavLink>
       <StyledNavLink to='/order'>Order</StyledNavLink>
     </StyledNav>
   )

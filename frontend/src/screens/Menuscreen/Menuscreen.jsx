@@ -24,12 +24,13 @@ const Menuscreen = () => {
     <>
       <GlobalStyle/>
       <Header/>
+      {isLoading ? (
+          <Loader/>
+        ) : (
       <StyledWrapper>
         <StyledLink to='/order'>Order here</StyledLink>
         <GridContainer>
-        {isLoading ? (
-          <Loader/>
-        ) : (
+       
           <>
 
             {menuData.map((menuItem) => {
@@ -44,9 +45,10 @@ const Menuscreen = () => {
               )
             })}
           </>
-        )}
-        </GridContainer>
+          </GridContainer>
       </StyledWrapper>
+        )}
+      
     </>
   )
 }

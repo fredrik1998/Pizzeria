@@ -16,18 +16,23 @@ const Loader = () => {
     border: "3px solid #000",
     borderTopColor: "#fff",
     borderRadius: "50%",
-    animation: "spin 1s ease-in-out infinite",
   };
 
-  const animation = {
-    spin: {
-      transform: "rotate(360deg)",
+  const spinTransition = {
+    rotate: {
+      duration: 1,
+      ease: "linear",
+      repeat: Infinity,
     },
   };
 
   return (
     <motion.div style={container}>
-      <motion.span style={circle} animate={animation.spin} />
+      <motion.span
+        style={circle}
+        animate={{ rotate: 360 }}
+        transition={spinTransition}
+      />
     </motion.div>
   );
 };

@@ -9,8 +9,8 @@ const Homescreen = () => {
     <GlobalStyles/>
     <StyledContainer>
     <StyledImage src={img}></StyledImage>
-    <StyledH1>Pizzeria</StyledH1>
-    <StyledDesc>Best Italian Pizza</StyledDesc>
+    <StyledH1>Pizzetta</StyledH1>
+    <StyledDesc>Personalized Pizzas, Perfectly Made</StyledDesc>
     <Navbar/>
     </StyledContainer>
     </>
