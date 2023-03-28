@@ -64,9 +64,9 @@ class Menu(db.Model):
 @app.before_first_request
 def create_table():
     db.create_all()
-    create_pizzas()
+    #create_pizzas()
 
-def create_pizzas():
+#def create_pizzas():
     if not Menu.query.first():
         Menu.create_pizza(image_path='margarita.jpg', name='Margherita', category='Pizza', size='Medium', toppings='Tomatoes, basil, mozzarella', description='Classic Italian pizza with tomato sauce, mozzarella cheese, and basil', price=10, countInStock=10)
         Menu.create_pizza(image_path='pepperoni.jpg', name='Pepperoni', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, pepperoni', description='Pizza with tomato sauce, mozarella cheese and pepperoni', price=11, countInStock=10)
@@ -186,6 +186,35 @@ def add_pizza():
     }
     return jsonify(pizza_dict), 201
 
+@app.route('/api/menu/update/<int:id>', methods=['PUT'])
+def update_pizza(id):
+    pizza = Menu.query.get_or_404(id)
+
+    pizza.image_path = request.json.get('image_path', pizza.image_path)
+    pizza.name = request.json.get('name', pizza.name)
+    pizza.category = request.json.get('category', pizza.category)
+    pizza.size = request.json.get('size', pizza.size)
+    pizza.toppings = request.json.get('toppings', pizza.toppings)
+    pizza.description = request.json.get('description', pizza.description)
+    pizza.price = request.json.get('price', pizza.price)
+    pizza.countInStock = request.json.get('countInStock', pizza.countInStock)
+
+    db.session.commit()
+
+    pizza_dict = {
+        "id": pizza.id,
+        "image_path": pizza.image_path.replace("/static/images/", ""),
+        "name": pizza.name,
+        "category": pizza.category,
+        "size": pizza.size,
+        "toppings": pizza.toppings,
+        "description": pizza.description,
+        "price": pizza.price,
+        "countInStock": pizza.countInStock,
+    }
+    return jsonify(pizza_dict), 200
+
+
 @app.route('/api/menu/delete/<int:id>', methods=['DELETE'])
 def delete_pizza(id):
     pizza = Menu.query.get_or_404(id)
@@ -214,7 +243,6 @@ def add_order():
 def get_order(orderId):
     order = Order.query.get(orderId)
     if order:
-        # Parse the JSON string to an object
         items_data = json.loads(order.items)
 
         order_data = {
@@ -279,10 +307,9 @@ def login():
     if not email_or_username or not password:
         return jsonify({"msg": "Missing username or password"}), 400
 
-    # Try to find the user by email
+    
     user = User.query.filter_by(email=email_or_username).first()
-
-    # If the user is not found by email, try to find by username
+    
     if user is None:
         user = User.query.filter_by(username=email_or_username).first()
 
@@ -292,6 +319,33 @@ def login():
 
     return jsonify({"msg": "Bad username or password"}), 401
     
+
+@app.route('/api/register', methods=['POST'])
+def register():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    username = request.json.get('username', None)
+    email = request.json.get('email', None)
+    password = request.json.get('password', None)
+
+    if not username or not email or not password:
+        return jsonify({"msg": "Missing username, email, or password"}), 400
+
+    existing_user_email = User.query.filter_by(email=email).first()
+    existing_user_username = User.query.filter_by(username=username).first()
+
+    if existing_user_email or existing_user_username:
+        return jsonify({"msg": "Email or username already taken"}), 409
+
+    hashed_password = generate_password_hash(password)
+    new_user = User(username=username, email=email, password=hashed_password)
+    db.session.add(new_user)
+    db.session.commit()
+
+    access_token = create_access_token(identity=new_user.id)
+    return jsonify(access_token=access_token, msg="User created"), 201
+
 
 if __name__ == '__main__':
     app.run(debug=True)

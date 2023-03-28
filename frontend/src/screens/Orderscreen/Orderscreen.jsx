@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Stripe from 'stripe'
+import { CartContext } from '../../CartContext';
 import { loadStripe } from '@stripe/stripe-js'
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import GlobalStyle from '../../GlobalStyles';
 import CheckoutForm from '../../components/CheckoutForm/CheckoutForm';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
+import { Grid } from "@mui/material";
 import {
   StyledContainer,
   StyledItemContainer,
@@ -31,10 +33,13 @@ import {
 import { FaPlus, FaMinus  } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
+const appearance = {
+  theme: 'flat'
+};
 const stripePromise = loadStripe('pk_test_51MbkNeGJ8v9b2yrMsOEfEwwuEkzRpZOrJ2A5Wkdti8WqCdwI7b0BXIFGAwX888Qpd6K8fZG07igiitpOGOEE52Ns00Aj9fGYtL')
 const Orderscreen = () => {
   const [orderItems, setOrderItems] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
+  const { cartItems, setCartItems } = useContext(CartContext);
   const [isLoading, setIsLoading] = useState(true)
   const [isDisabled, setisDisabled] = useState(true)
   const [orderId, setOrderId] = useState(null);
@@ -59,15 +64,20 @@ const Orderscreen = () => {
     const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
   
     if (existingItem) {
-      setCartItems(
-        cartItems.map((cartItem) =>
-          cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-        )
-      );
+      if (existingItem.quantity < item.countInStock) {
+        setCartItems(
+          cartItems.map((cartItem) =>
+            cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+          )
+        );
+      } else {
+        console.log('Cannot add more items. Maximum stock reached.');
+      }
     } else {
       setCartItems([...cartItems, { ...item, quantity: 1 }]);
     }
   };
+  
 
   const removeFromCart = (item) => {
     const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
@@ -237,24 +247,25 @@ const Orderscreen = () => {
 
   return (
     <StyledCartItem key={cartItem.id}>
-      <StyledH1>
+       <StyledButtonContainer>
+       <StyledH1>
         {cartItem.quantity}x {cartItem.name}
       </StyledH1>
-      <p>${(cartItem.price * cartItem.quantity).toFixed(2)}</p>
-      <StyledButtonContainer>
+      <CartButton
+          onClick={() => removeFromCart(cartItem)}
+          disabled={cartItem.quantity <= 0}
+        >
+          <FaMinus />
+        </CartButton>
         <CartButton
           onClick={() => addToCart(cartItem)}
           disabled={cartItem.quantity >= menuItem.countInStock}
         >
           <FaPlus />
         </CartButton>
-        <CartButton
-          onClick={() => removeFromCart(cartItem)}
-          disabled={cartItem.quantity <= 0}
-        >
-          <FaMinus />
-        </CartButton>
       </StyledButtonContainer>
+      <p>${(cartItem.price * cartItem.quantity).toFixed(2)}</p>
+     
     </StyledCartItem>
   );
 })}
@@ -311,7 +322,7 @@ const Orderscreen = () => {
   </>
       )}
       {showPaymentForm && stripePromise && clientSecret && (
-  <Elements stripe={stripePromise} options={{ clientSecret }}>
+  <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>
     <CheckoutForm orderId={orderId} />
   </Elements>
 )}

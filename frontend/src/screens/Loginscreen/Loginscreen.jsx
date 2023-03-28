@@ -65,8 +65,6 @@ const Loginscreen = () => {
         }
       };
       
-
-
   return (
     <>
     <GlobalStyle/>
@@ -94,10 +92,10 @@ const Loginscreen = () => {
           </StyledInput>
           <StyledError>{formErrors.password}</StyledError>
           <StyledButtonContainer>
+          <StyledLink to='/register'>Dont have an account? click here</StyledLink>
           <StyledButton type='submit'>Login</StyledButton>
           </StyledButtonContainer>
         </StyledForm>
-        <StyledLink to='/register'>Dont have an account? click here</StyledLink>
       </LoginWrapper>
     </>
   )

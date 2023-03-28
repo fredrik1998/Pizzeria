@@ -42,8 +42,19 @@ margin-bottom: 24px;
 border-radius: 10px;
 `
 export const StyledLink = styled(Link)`
-font-size: 18px;
+font-size: 16px;
 text-decoration: none;
-margin-top: 24px;
-color: #000;
+border-radius: 18px;
+width: 20%;
+text-align: center;
+max-width: 500px;
+font-weight: 700;
+letter-spacing: 0.1rem;
+padding: 10px;
+border: none;
+color: #fafafa;
+padding: 20px;
+margin-top: 20px;
+background-color: hsl(180, 29%, 50%);
+cursor: pointer;
 `

@@ -5,7 +5,7 @@ import {StyledWrapper, GridContainer, GridItem, StyledH1, StyledText, StyledImag
 import Loader from '../../components/Loader/Loader'
 import Navbar from '../../components/Navbar/Navbar'
 import Header from '../../components/Header/Header' // Import the Header component
-
+import { FaPizzaSlice } from 'react-icons/fa'
 const Menuscreen = () => {
   const [menuData, setMenuData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -30,9 +30,7 @@ const Menuscreen = () => {
       <StyledWrapper>
         <StyledLink to='/order'>Order here</StyledLink>
         <GridContainer>
-       
           <>
-
             {menuData.map((menuItem) => {
               return (
                 <GridItem key={menuItem.id}>

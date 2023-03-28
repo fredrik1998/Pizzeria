@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Modal, Box, TextField } from '@mui/material';
 import axios from 'axios';
 import { FaPizzaSlice } from 'react-icons/fa'
@@ -21,60 +21,65 @@ margin-bottom: 20px;
 background-color: hsl(180, 29%, 50%);
 `;
 
-const AddPizzaModal = ({addNewPizza}) => {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState('');
-  const [size, setSize] = useState('');
-  const [toppings, setToppings] = useState('');
-  const [description, setDescription] = useState('');
-  const [countInStock, setCountInStock] = useState(0);
-  const [image_path, setimage_path] = useState('')
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const handleSubmit = async () => {
-    try {
-      const data = {
-        image_path,
-        name,
-        price,
-        category,
-        size,
-        toppings,
-        description,
-        countInStock,
-      };
-
-      const response = await axios.post('/api/menu/add', data, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log(response.data);
-      addNewPizza(response.data);
-      handleClose();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleImageChange = (event) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-
-    formData.append('image_path', file)
-    formData.append
-  }
-
+const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
+    const [open, setOpen] = useState(false);
+    const [id, setId] = useState(null);
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
+    const [category, setCategory] = useState('');
+    const [size, setSize] = useState('');
+    const [toppings, setToppings] = useState('');
+    const [description, setDescription] = useState('');
+    const [countInStock, setCountInStock] = useState(0);
+    const [image_path, setimage_path] = useState('');
   
-
+    useEffect(() => {
+      if (pizzaToUpdate) {
+        setId(pizzaToUpdate.id);
+        setName(pizzaToUpdate.name);
+        setPrice(pizzaToUpdate.price);
+        setCategory(pizzaToUpdate.category);
+        setSize(pizzaToUpdate.size);
+        setToppings(pizzaToUpdate.toppings);
+        setDescription(pizzaToUpdate.description);
+        setCountInStock(pizzaToUpdate.countInStock);
+        setimage_path(pizzaToUpdate.image_path);
+      }
+    }, [pizzaToUpdate]);
+  
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+  
+    const handleSubmit = async () => {
+      try {
+        const data = {
+          image_path,
+          name,
+          price,
+          category,
+          size,
+          toppings,
+          description,
+          countInStock,
+        };
+  
+        const response = await axios.put(`/api/menu/update/${id}`, data, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        console.log(response.data);
+        updatePizza(response.data);
+        handleClose();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
   return (
     <>
       <StyledButton onClick={handleOpen}><FaPizzaSlice/>
-        Add Pizza
+        Edit Pizza
       </StyledButton>
       <Modal open={open} onClose={handleClose}>
         <Box
@@ -147,7 +152,7 @@ const AddPizzaModal = ({addNewPizza}) => {
           />
           
           <StyledButton variant="contained" onClick={handleSubmit}>
-            <FaPizzaSlice/>Create
+            <FaPizzaSlice/> Update
           </StyledButton>
         </Box>
       </Modal>
@@ -155,4 +160,4 @@ const AddPizzaModal = ({addNewPizza}) => {
   );
 };
 
-export default AddPizzaModal;
+export default UpdatePizzaModal;

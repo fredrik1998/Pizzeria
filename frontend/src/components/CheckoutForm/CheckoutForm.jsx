@@ -26,16 +26,19 @@ const StyledCardElement = styled(CardElement)`
 `;
 
 const StyledButton = styled.button`
-  display: block;
-  width: 100%;
-  padding: 10px 20px;
-  background-color: #f5a623;
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+font-size: 16px;
+border-radius: 18px;
+width: 100%;
+margin: 0 auto;
+font-weight: 700;
+letter-spacing: 0.1rem;
+padding: 10px;
+border: none;
+color: #fafafa;
+padding: 20px;
+margin-top: 20px;
+background-color: hsl(180, 29%, 50%);
+cursor: pointer;
 `;
 
 const CheckoutForm = ({orderId}) => {
@@ -46,8 +49,6 @@ const CheckoutForm = ({orderId}) => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-
-  
 
   const handleSubmit = async (event) => {
     event.preventDefault();

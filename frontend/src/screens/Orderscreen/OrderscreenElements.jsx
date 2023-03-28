@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-
+import { Button } from "@mui/material";
 export const StyledContainer = styled.main`
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   margin: 20px;
 `;
 
@@ -13,11 +13,23 @@ export const StyledItemContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 100%;
+  width: 50%;
   margin-bottom: 20px;
   gap: 20px;
 
   border-bottom: 1px solid #ccc;
+
+  @media screen and (max-width: 767px) {
+    width: 100%;
+  }
+`;
+
+export const StyledCartContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  width: 50%;
 
   @media screen and (max-width: 767px) {
     width: 100%;
@@ -61,24 +73,24 @@ export const StyledLink = styled(Link)`
 `;
 
 export const StyledButton = styled.button`
-  display: block;
-  width: 50%;
-  padding: 10px 20px;
-  background-color: #f5a623;
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  :disabled{
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  @media screen and (max-width: 767px){
-    width: 100%;
-    
-  }
+font-size: 16px;
+width: 50%;
+border-radius: 18px;
+font-weight: 700;
+letter-spacing: 0.1rem;
+padding: 10px;
+border: none;
+color: #fafafa;
+padding: 15px;
+background-color: hsl(180, 29%, 50%);
+cursor: pointer;
+:disabled{
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+@media screen and (max-width: 767px) {
+width: 100%;
+}
 `;
 
 export const StyledTextButtonContainer = styled.div`
@@ -87,12 +99,7 @@ export const StyledTextButtonContainer = styled.div`
   flex: 1;
 `;
 
-export const StyledCartContainer = styled.div`
-display: flex;
-justify-content: center;
-flex-direction: column;
-gap: 20px;
-`
+
 export const StyledCartItem = styled.div`
 
 `
@@ -103,16 +110,17 @@ export const StyledTotal = styled.p`
   font-weight: 700;`
 
 export const StyledCheckoutButton = styled.button`
-display: block;
-  width: 100%;
-  padding: 10px 20px;
-  background-color: #f5a623;
-  color: #000;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
+font-size: 16px;
+border-radius: 18px;
+width: 50%;
+font-weight: 700;
+letter-spacing: 0.1rem;
+padding: 10px;
+border: none;
+color: #fafafa;
+padding: 20px;
+background-color: hsl(180, 29%, 50%);
+cursor: pointer;
 `
 export const StyledButtonContainer = styled.div`
 display: flex;
@@ -120,11 +128,10 @@ flex-direction: row;
 `
 
 export const CartButton = styled.button`
-  margin: 10px;
   border-radius: 10px;
   width: 30px;
   height: 30px;
-  margin-bottom: 20px;
+  margin-left: 10px;
   background: none;
   color: #000;
   font-weight: 700;
@@ -151,7 +158,8 @@ export const StyledInput = styled.input`
 font-size: 16px;
 font-weight: 300;
 border-radius: 10px;
-width: 80%;
+width: 100%;
+max-width: 500px;
 cursor: pointer;
 font-weight: 700;
 color: hsl(213, 96%, 18%);
@@ -167,16 +175,18 @@ padding: 15px;
 `
 
 export const StyledCartButton = styled.button`
-display: block;
-width: 100%;
-padding: 10px 20px;
-margin-top: 40px;
-background-color: #f5a623;
-color: #000;
-border: none;
-border-radius: 5px;
 font-size: 16px;
-font-weight: bold;
+border-radius: 18px;
+width: 100%;
+max-width: 500px;
+font-weight: 700;
+letter-spacing: 0.1rem;
+padding: 10px;
+border: none;
+color: #fafafa;
+padding: 20px;
+margin-top: 20px;
+background-color: hsl(180, 29%, 50%);
 cursor: pointer;
 `
 export const ErrorMessage = styled.p`

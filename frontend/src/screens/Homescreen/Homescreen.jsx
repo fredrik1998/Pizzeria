@@ -3,6 +3,7 @@ import GlobalStyles from '../../GlobalStyles'
 import { StyledContainer, StyledImage, StyledH1, StyledDesc } from './HomescreenElements'
 import Navbar from '../../components/Navbar/Navbar'
 import img from '../../images/pizzeria.jpg'
+
 const Homescreen = () => {
   return (
     <>
