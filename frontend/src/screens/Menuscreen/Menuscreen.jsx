@@ -6,6 +6,7 @@ import Loader from '../../components/Loader/Loader'
 import Navbar from '../../components/Navbar/Navbar'
 import Header from '../../components/Header/Header' // Import the Header component
 import { FaPizzaSlice } from 'react-icons/fa'
+import Layout from '../../components/Layout'
 const Menuscreen = () => {
   const [menuData, setMenuData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -22,31 +23,33 @@ const Menuscreen = () => {
   
   return (
     <>
-      <GlobalStyle/>
-      <Header/>
-      {isLoading ? (
-          <Loader/>
-        ) : (
-      <StyledWrapper>
-        <StyledLink to='/order'>Order here</StyledLink>
-        <GridContainer>
-          <>
-            {menuData.map((menuItem) => {
-              return (
-                <GridItem key={menuItem.id}>
-                  <StyledH1>{menuItem.name}</StyledH1>
-                  <StyledImage src={menuItem.image_path} />
-                  <StyledText>{menuItem.description}</StyledText>
-                  <StyledText>Size: {menuItem.size}</StyledText>
-                  <StyledPrice>${menuItem.price}</StyledPrice>
-                </GridItem>
-              )
-            })}
-          </>
-          </GridContainer>
-      </StyledWrapper>
-        )}
-      
+      <Layout>
+  <GlobalStyle/>
+  <Header/>
+  {isLoading ? (
+    <Loader/>
+  ) : (
+    <StyledWrapper>
+      <StyledLink to='/order'>Order here</StyledLink>
+      <GridContainer>
+        <>
+          {menuData.map((menuItem) => {
+            return (
+              <GridItem key={menuItem.id}>
+                <StyledH1>{menuItem.name}</StyledH1>
+                <StyledImage src={menuItem.image_path} key={menuItem.image_path} />
+                <StyledText>{menuItem.description}</StyledText>
+                <StyledText>Size: {menuItem.size}</StyledText>
+                <StyledPrice>${menuItem.price}</StyledPrice>
+              </GridItem>
+            )
+          })}
+        </>
+      </GridContainer>
+    </StyledWrapper>
+  )}
+</Layout>
+
     </>
   )
 }

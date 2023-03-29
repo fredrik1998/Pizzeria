@@ -10,8 +10,8 @@ export const StyledButton = styled.button`
   display: block;
   width: 100%;
   padding: 10px 20px;
-  background-color: #C8102E;
-  color: #fafafa;
+  color: #121212;
+  background: none;
   border: none;
   border-radius: 5px;
   font-size: 16px;

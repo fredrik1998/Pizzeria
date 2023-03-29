@@ -33,6 +33,7 @@ import {
 import { FaPlus, FaMinus  } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
+import Layout from '../../components/Layout';
 const appearance = {
   theme: 'flat'
 };
@@ -147,17 +148,19 @@ const Orderscreen = () => {
     setFormErrors(errors)
     if(Object.keys(errors).length === 0){
 
-      axios.post('/api/order/add', payload)
+      axios.post('/api/order/add', payload, {
+        headers: {'Content-Type': 'application/json'}
+      })
       .then((response) => {
-        console.log('Full Response:', response); // Log the entire response
+        console.log('Full Response:', response);
         const { orderId } = response.data;
         setOrderId(orderId);
         console.log('OrderId:', orderId);
+        fetchClientSecret();
       })
       .catch((error) => {
         console.error(error);
       });
-    
     
         setCartItems([]);
         setShowCheckoutForm(false);
@@ -182,40 +185,31 @@ const Orderscreen = () => {
 
   const [clientSecret, setClientSecret] = useState(null);
 
-  useEffect(() => {
-    let cancelToken = axios.CancelToken.source();
+  const fetchClientSecret = async () => {
+    try {
+      const { data } = await axios.post('/api/create_payment', {
+        total_price: calculateTotal(),
+      }, {
+        headers: {'Contet-Type' : 'application/json'}
+      })
+      const { client_secret } = data;
+      console.log(client_secret);
+      setClientSecret(client_secret);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   
-    const fetchClientSecret = async () => {
-      try {
-        const { data } = await axios.post(
-          '/api/create_payment',
-          { cancelToken: cancelToken.token }
-        );
-        const { client_secret } = data;
-        console.log(client_secret);
-        setClientSecret(client_secret);
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          console.log('Request canceled:', error.message);
-        } else {
-          throw error;
-        }
-      }
-    };
-  
-    fetchClientSecret();
-  
-    return () => {
-      cancelToken.cancel('Component unmounted');
-    };
-  }, []);
-
   useEffect(() => {
     setisDisabled(Object.keys(formErrors).length > 0)
-  }, [formErrors])
+    if(cartItems.length === 0){
+      setShowCheckoutForm(false)
+    }
+  }, [formErrors, cartItems])
 
   return (
     <>
+    <Layout>
       <GlobalStyle />
       <Header />
       {isLoading ? (
@@ -232,7 +226,7 @@ const Orderscreen = () => {
         {item.countInStock <= 0 && <p>Out of Stock</p>}
       </StyledTextContainer>
       <StyledTextButtonContainer>
-        <StyledButton disabled={item.countInStock <= 0} onClick={() => addToCart(item)}>Add to cart</StyledButton>
+        <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
       </StyledTextButtonContainer>
     </StyledItemContainer>
   );
@@ -273,16 +267,19 @@ const Orderscreen = () => {
 
 {cartItems && cartItems.length > 0 && (
   <>
+  <Layout>
     <StyledTotal>Total: ${calculateTotal().toFixed(2)}</StyledTotal>
     {!showCheckoutForm && (
       <StyledCheckoutButton onClick={handleCheckout}>
         Checkout
       </StyledCheckoutButton>
     )}
+    </Layout>
   </>
 )}
           {showCheckoutForm && (
             <>
+            <Layout>
             <StyledForm noValidate onSubmit={handleFormSubmit}>
               <h2>Enter your information</h2>
               <StyledLabel>Name</StyledLabel>
@@ -319,6 +316,7 @@ const Orderscreen = () => {
           <StyledCartButton type="submit">Submit</StyledCartButton>
           
         </StyledForm>
+        </Layout>   
   </>
       )}
       {showPaymentForm && stripePromise && clientSecret && (
@@ -326,12 +324,10 @@ const Orderscreen = () => {
     <CheckoutForm orderId={orderId} />
   </Elements>
 )}
-
     </StyledCartContainer>
   </StyledContainer>
-
       )}
-      
+      </Layout>
 </>
   );
 };

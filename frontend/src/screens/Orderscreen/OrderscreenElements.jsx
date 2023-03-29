@@ -43,8 +43,8 @@ export const StyledTextContainer = styled.div`
 `;
 
 export const StyledH1 = styled.h1`
-  font-size: 24px;
-  margin-bottom: 8px;
+  font-size: 32px;
+  font-weight: 700;
 `;
 
 export const StyledText = styled.p`

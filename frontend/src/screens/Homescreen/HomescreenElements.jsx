@@ -7,7 +7,7 @@ export const StyledContainer = styled.div`
 
 export const StyledImage = styled.img`
   width: 100%;
-  height: 60vh;
+  height: 50vh;
 `;
 
 export const StyledH1 = styled.h1`
@@ -22,7 +22,7 @@ export const StyledH1 = styled.h1`
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 `;
 
-export const StyledDesc = styled.em`
+export const StyledMotto = styled.em`
 position: absolute;
 background: none;
 top: 27%;
@@ -31,3 +31,20 @@ transform: translate(-50%, -50%);
 font-size: 20px;
 font-weight: 700;
 text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);`
+
+export const StyledDescContainer = styled.p`
+display: flex;
+justify-content: center;
+align-items: center;
+width: 80%;
+margin: 0 auto;
+margin-top: 100px;
+`
+
+export const StyledDesc = styled.p`
+font-size: 20px;
+font-weight: 700;
+color: #121212;
+font-style: italic;
+letter-spacing: .2rem;
+`

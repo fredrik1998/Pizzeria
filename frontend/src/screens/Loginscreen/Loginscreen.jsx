@@ -15,6 +15,7 @@ import {
     
   } from './LoginscreenElements';
 import { useNavigate } from 'react-router-dom';
+import Layout from '../../components/Layout';
 const Loginscreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -53,10 +54,7 @@ const Loginscreen = () => {
             if (response.data.access_token) {
               // Save the access token in local storage or in your app state
               localStorage.setItem('access_token', response.data.access_token);
-      
-              // Redirect the user to the dashboard or another protected route
               navigate('/admin')
-
             }
           } catch (error) {
             // Handle errors from the server
@@ -67,6 +65,7 @@ const Loginscreen = () => {
       
   return (
     <>
+    <Layout>
     <GlobalStyle/>
     <Header/>
     <LoginWrapper>
@@ -97,6 +96,7 @@ const Loginscreen = () => {
           </StyledButtonContainer>
         </StyledForm>
       </LoginWrapper>
+      </Layout>
     </>
   )
 }

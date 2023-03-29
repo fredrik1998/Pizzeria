@@ -7,6 +7,7 @@ from flask import request
 from flask_migrate import Migrate
 from flask_jwt_extended import create_access_token, create_refresh_token, JWTManager
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 file_path = os.path.abspath(os.getcwd())+"\database.db"
 import json
@@ -15,10 +16,12 @@ import stripe
 load_dotenv()
 app = Flask(__name__)
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, "frontend", "public")
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'img' 'webp'}
 jwt = JWTManager(app)
 db = SQLAlchemy()
 migrate = Migrate(app, db)
@@ -42,6 +45,11 @@ def after_request(response):
 @app.route('/static/images/<path:path>')
 def send_static(path):
     return send_from_directory('static/images', path)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    
 
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -159,23 +167,40 @@ def get_pizza_by_id(id):
 
 @app.route('/api/menu/add', methods=['POST'])
 def add_pizza():
+    name = request.form['name']
+    category = request.form['category']
+    size = request.form['size']
+    toppings = request.form['toppings']
+    description = request.form['description']
+    price = request.form['price']
+    countInStock = request.form['countInStock']
+
+    image_file = request.files.get('image')
+    if image_file:
+        filename = secure_filename(image_file.filename)
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image_file.save(image_path)
+        relative_image_path = f"/{filename}"
+    else:
+        relative_image_path = f"/{filename}"
+
     new_pizza = Menu(
-        image_path=request.json['image_path'],
-        name=request.json['name'],
-        category=request.json['category'],
-        size=request.json['size'],
-        toppings=request.json['toppings'],
-        description=request.json['description'],
-        price=request.json['price'],
-        countInStock=request.json['countInStock']
+        name=name,
+        category=category,
+        size=size,
+        toppings=toppings,
+        description=description,
+        price=price,
+        countInStock=countInStock,
+        image_path=relative_image_path
     )
-    
+
     db.session.add(new_pizza)
     db.session.commit()
-    
+
     pizza_dict = {
         "id": new_pizza.id,
-        "image_path": new_pizza.image_path.replace("/static/images/", ""),
+        "image_path": new_pizza.image_path,
         "name": new_pizza.name,
         "category": new_pizza.category,
         "size": new_pizza.size,
@@ -186,24 +211,32 @@ def add_pizza():
     }
     return jsonify(pizza_dict), 201
 
+
 @app.route('/api/menu/update/<int:id>', methods=['PUT'])
 def update_pizza(id):
     pizza = Menu.query.get_or_404(id)
 
-    pizza.image_path = request.json.get('image_path', pizza.image_path)
-    pizza.name = request.json.get('name', pizza.name)
-    pizza.category = request.json.get('category', pizza.category)
-    pizza.size = request.json.get('size', pizza.size)
-    pizza.toppings = request.json.get('toppings', pizza.toppings)
-    pizza.description = request.json.get('description', pizza.description)
-    pizza.price = request.json.get('price', pizza.price)
-    pizza.countInStock = request.json.get('countInStock', pizza.countInStock)
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            pizza.image_path = f"/{filename}"
+
+    pizza.name = request.form.get('name', pizza.name)
+    pizza.category = request.form.get('category', pizza.category)
+    pizza.size = request.form.get('size', pizza.size)
+    pizza.toppings = request.form.get('toppings', pizza.toppings)
+    pizza.description = request.form.get('description', pizza.description)
+    pizza.price = request.form.get('price', pizza.price)
+    pizza.countInStock = request.form.get('countInStock', pizza.countInStock)
+    pizza.image_path = request.form.get('image_path', pizza.image_path)
 
     db.session.commit()
 
     pizza_dict = {
         "id": pizza.id,
-        "image_path": pizza.image_path.replace("/static/images/", ""),
+        "image_path": pizza.image_path,
         "name": pizza.name,
         "category": pizza.category,
         "size": pizza.size,
@@ -213,6 +246,8 @@ def update_pizza(id):
         "countInStock": pizza.countInStock,
     }
     return jsonify(pizza_dict), 200
+
+
 
 
 @app.route('/api/menu/delete/<int:id>', methods=['DELETE'])
@@ -279,13 +314,14 @@ def get_orders():
 def create_payment():
     try:
         # Get the payment amount and description from the request
-        amount = 1000
+        amount = request.json['total_price']
         
         # Convert the amount to cents
+        amountInCents = amount * 100
     
-        # Create a new payment intent
+        # Create a new payment inten
         intent = stripe.PaymentIntent.create(
-            amount=amount,
+            amount=amountInCents,
             currency='usd',
             payment_method_types=['card'],
         )

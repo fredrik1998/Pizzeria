@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react';
 import { StyledHeader, StyledLink, StyledSeperator, StyledImg, StyledSpan, StyledCart } from './HeaderElements';
-import img from '../../../public/pizzaicon.png';
+import img from '../../../public/pizzaicon.png'
 import { FaShoppingBasket } from 'react-icons/fa';
 import { CartContext } from '../../CartContext';
 

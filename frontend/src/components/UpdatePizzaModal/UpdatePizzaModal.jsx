@@ -8,17 +8,14 @@ import styled from 'styled-components';
 const StyledButton = styled.button`
 font-size: 16px;
 width: 10%;
-min-width: 125px;
+min-width: 75px;
 border-radius: 18px;
 font-weight: 700;
 letter-spacing: 0.1rem;
-padding: 10px;
 border: none;
 cursor: pointer;
-color: #fafafa;
-padding: 15px;
-margin-bottom: 20px;
-background-color: hsl(180, 29%, 50%);
+color: #121212;
+background: none
 `;
 
 const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
@@ -31,7 +28,7 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
     const [toppings, setToppings] = useState('');
     const [description, setDescription] = useState('');
     const [countInStock, setCountInStock] = useState(0);
-    const [image_path, setimage_path] = useState('');
+    const [image, setImage] = useState('');
   
     useEffect(() => {
       if (pizzaToUpdate) {
@@ -43,7 +40,6 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
         setToppings(pizzaToUpdate.toppings);
         setDescription(pizzaToUpdate.description);
         setCountInStock(pizzaToUpdate.countInStock);
-        setimage_path(pizzaToUpdate.image_path);
       }
     }, [pizzaToUpdate]);
   
@@ -51,30 +47,41 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
     const handleClose = () => setOpen(false);
   
     const handleSubmit = async () => {
-      try {
-        const data = {
-          image_path,
-          name,
-          price,
-          category,
-          size,
-          toppings,
-          description,
-          countInStock,
-        };
-  
-        const response = await axios.put(`/api/menu/update/${id}`, data, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        console.log(response.data);
-        updatePizza(response.data);
-        handleClose();
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  try {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('category', category);
+    formData.append('size', size);
+    formData.append('toppings', toppings);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('countInStock', countInStock);
+
+    if (image) {
+      formData.append('image', image);
+    } else {
+      formData.append('image_path', pizzaToUpdate.image_path);
+    }
+
+    const response = await axios.put(`/api/menu/update/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log(response.data);
+    updatePizza(response.data);
+    handleClose();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+    const handleImageChange = (event) => {
+      const file = event.target.files[0];
+      setImage(file);
+    }
   
   return (
     <>
@@ -144,12 +151,10 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
             onChange={(event) => setCountInStock(event.target.value)}
             variant="outlined"
           />
-           <TextField
-            label="Image path"
-            value={image_path}
-            onChange={(event) => setimage_path(event.target.value)}
-            variant="outlined"
-          />
+          <input
+  type="file"
+  onChange={handleImageChange}
+/>
           
           <StyledButton variant="contained" onClick={handleSubmit}>
             <FaPizzaSlice/> Update

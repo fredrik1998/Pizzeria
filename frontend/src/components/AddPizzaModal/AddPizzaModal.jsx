@@ -30,29 +30,29 @@ const AddPizzaModal = ({addNewPizza}) => {
   const [toppings, setToppings] = useState('');
   const [description, setDescription] = useState('');
   const [countInStock, setCountInStock] = useState(0);
-  const [image_path, setimage_path] = useState('')
+  const [image, setImage] = useState('')
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async () => {
     try {
-      const data = {
-        image_path,
-        name,
-        price,
-        category,
-        size,
-        toppings,
-        description,
-        countInStock,
-      };
-
-      const response = await axios.post('/api/menu/add', data, {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('category', category);
+      formData.append('size', size);
+      formData.append('toppings', toppings);
+      formData.append('description', description);
+      formData.append('price', price);
+      formData.append('countInStock', countInStock);
+      formData.append('image', image);
+  
+      const response = await axios.post('/api/menu/add', formData, {
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'multipart/form-data',
         },
       });
+  
       console.log(response.data);
       addNewPizza(response.data);
       handleClose();
@@ -60,17 +60,14 @@ const AddPizzaModal = ({addNewPizza}) => {
       console.error(error);
     }
   };
-
-  const handleImageChange = (event) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-
-    formData.append('image_path', file)
-    formData.append
-  }
-
   
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setImage(file);
+  };
+  
+  
   return (
     <>
       <StyledButton onClick={handleOpen}><FaPizzaSlice/>
@@ -139,12 +136,11 @@ const AddPizzaModal = ({addNewPizza}) => {
             onChange={(event) => setCountInStock(event.target.value)}
             variant="outlined"
           />
-           <TextField
-            label="Image path"
-            value={image_path}
-            onChange={(event) => setimage_path(event.target.value)}
-            variant="outlined"
-          />
+           <input
+  type="file"
+  onChange={handleImageChange}
+/>
+
           
           <StyledButton variant="contained" onClick={handleSubmit}>
             <FaPizzaSlice/>Create

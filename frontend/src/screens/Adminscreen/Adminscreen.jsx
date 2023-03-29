@@ -38,7 +38,6 @@ const Adminscreen = () => {
   const [menuData, setMenuData] = useState([])
   const [ordersData, setOrdersData] = useState([])
  
-
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -87,7 +86,6 @@ const Adminscreen = () => {
     setMenuData((prevMenuData) => [...prevMenuData, newPizza]);
   };
 
- 
   return (
     <StyledWrapper>
     <Header/>
@@ -110,7 +108,6 @@ const Adminscreen = () => {
       <TableBody>
         {menuData.map((menu) => {
           return(
-         
             <StyledTableRow key={menu.id}>
               <StyledTableCell>{menu.id}</StyledTableCell>
               <StyledTableCell>{menu.name}</StyledTableCell>
