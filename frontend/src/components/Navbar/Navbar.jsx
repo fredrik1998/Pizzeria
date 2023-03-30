@@ -4,9 +4,8 @@ import { StyledNav, StyledNavLink } from './NavbarElements'
   return (
     <StyledNav>
       <StyledNavLink to='/menu'>Menu</StyledNavLink>
-      <StyledNavLink>About us</StyledNavLink>
-      <StyledNavLink to='/login'>Login</StyledNavLink>
       <StyledNavLink to='/order'>Order</StyledNavLink>
+      <StyledNavLink to='/login'>Login</StyledNavLink>
     </StyledNav>
   )
 }

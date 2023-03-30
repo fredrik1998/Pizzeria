@@ -14,6 +14,8 @@ margin-top: 20px`
 export const StyledH2 = styled.h2`
 font-size: 28px;
 margin-top: 20px;
+margin-left: -100px;
+text-decoration: underline;
 `
 export const StyledText = styled.p`
 font-size: 20px;
@@ -23,6 +25,7 @@ export const StyledLi = styled.li`
 text-decoration: none;
 list-style-type: none;
 margin-bottom: 40px;
+margin-left: -40px;
 font-size: 20px;
 `
 export const StyledUl = styled.ul`

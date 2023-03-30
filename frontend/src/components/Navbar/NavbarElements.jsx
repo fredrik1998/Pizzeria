@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export const StyledNav = styled.nav`
 display: flex;
 flex-direction: row;
-justify-content: space-around;
+justify-content: space-evenly;
 align-items: center;
 width: 100%;
 `

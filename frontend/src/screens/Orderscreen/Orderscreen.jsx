@@ -12,6 +12,7 @@ import {
   StyledContainer,
   StyledItemContainer,
   StyledH1,
+  StyledH2,
   StyledImage,
   StyledPrice,
   StyledButton,
@@ -28,11 +29,16 @@ import {
   StyledInput,
   StyledCartButton,
   ErrorMessage,
+  StyledGridContainer,
+  StyledBox,
+  StyledBoxInput,
+  CheckmarkImage
 } from './OrderscreenElements';
 
 import { FaPlus, FaMinus  } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
+import checkmark from '../../assets/icon-checkmark.svg'
 import Layout from '../../components/Layout';
 const appearance = {
   theme: 'flat'
@@ -46,8 +52,10 @@ const Orderscreen = () => {
   const [orderId, setOrderId] = useState(null);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false)
-  const navigate = useNavigate()
-  
+  const [selectedExtraToppings, setSelectedExtraToppings] = useState([]);
+
+  const [isChecked, setIsChecked] = useState([]);
+
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -79,7 +87,6 @@ const Orderscreen = () => {
     }
   };
   
-
   const removeFromCart = (item) => {
     const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
   
@@ -95,17 +102,63 @@ const Orderscreen = () => {
       }
     }
   };
+
   
   
-  const calculateTotal = () => {
-    return cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
-  };
   
 
   const handleCheckout = () => {
     setShowCheckoutForm(true);
   };
 
+  const extraToppings = {
+    'Mozarella': {
+      price: 2,  
+    },
+    'Breasola': {
+      price: 2,
+      
+    },
+    'Burrata': {
+      price: 2,
+    },
+    'Mussels': {
+      price: 2,
+    },
+    'Artichokes': {
+      price: 2,
+    },
+    'Salami': {
+      price: 2,
+    },
+
+  };
+
+  const handleAddOnsEvent = (topping) => {
+    const index = selectedExtraToppings.indexOf(topping);
+    if (index === -1) {
+      setSelectedExtraToppings([...selectedExtraToppings, topping]);
+      setIsChecked([...isChecked, true]); 
+    } else {
+      setSelectedExtraToppings(selectedExtraToppings.filter((item) => item !== topping));
+      setIsChecked([...isChecked.slice(0, index), ...isChecked.slice(index + 1)]);
+    }
+  };
+
+  const itemPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
+  const toppingsPrice = selectedExtraToppings.reduce((total, topping, index) => {
+    if (isChecked[index]) {
+        return total + extraToppings[topping].price;
+    } else {
+        return total;
+    }
+}, 0);
+
+  
+  const calculateTotal = () => {
+    return itemPrice + toppingsPrice;
+  };
+  
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
@@ -216,25 +269,30 @@ const Orderscreen = () => {
         <Loader/>
       ) : (
         <StyledContainer>
-        {orderItems.map((item) => {
-  return (
-    <StyledItemContainer key={item.id}>
-      <StyledImage src={item.image_path} />
-      <StyledTextContainer>
-        <StyledH1>{item.name}</StyledH1>
-        <StyledPrice>${item.price}</StyledPrice>
-        {item.countInStock <= 0 && <p>Out of Stock</p>}
-      </StyledTextContainer>
-      <StyledTextButtonContainer>
-        <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
-      </StyledTextButtonContainer>
-    </StyledItemContainer>
-  );
-})}
+          <StyledH1>Our Pizzas</StyledH1>
+          <Grid container spacing={2}>
+        <Grid item xs={12} md={8}>
+  <StyledGridContainer>
+    {orderItems.map((item) => (
+      <StyledItemContainer key={item.id}>
+        <StyledImage src={item.image_path} />
+        <StyledTextContainer>
+          <StyledH1>{item.name}</StyledH1>
+          <StyledPrice>${item.price}</StyledPrice>
+          {item.countInStock <= 0 && <p>Out of Stock</p>}
+        </StyledTextContainer>
+        <StyledTextButtonContainer>
+          <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
+        </StyledTextButtonContainer>
+      </StyledItemContainer>
+    ))}
+  </StyledGridContainer>
+  </Grid>
+  <Grid item xs={12} md={4}>
 
         <StyledCartContainer>
           {cartItems && cartItems.length > 0 && (
-            <StyledH1>Cart Checkout</StyledH1>
+            <StyledH2>Cart Checkout</StyledH2>
           )}
           {cartItems.map((cartItem) => {
   const menuItem = orderItems.find((orderItem) => orderItem.id === cartItem.id);
@@ -242,9 +300,9 @@ const Orderscreen = () => {
   return (
     <StyledCartItem key={cartItem.id}>
        <StyledButtonContainer>
-       <StyledH1>
+       <StyledH2>
         {cartItem.quantity}x {cartItem.name}
-      </StyledH1>
+      </StyledH2>
       <CartButton
           onClick={() => removeFromCart(cartItem)}
           disabled={cartItem.quantity <= 0}
@@ -258,8 +316,19 @@ const Orderscreen = () => {
           <FaPlus />
         </CartButton>
       </StyledButtonContainer>
+      <div>
+    <h4>Extra Toppings</h4>
+  {Object.keys(extraToppings).map((topping, index) => (
+    <StyledBox key={index} onClick={() => handleAddOnsEvent(topping)}>
+      <StyledBoxInput type='button'>
+        {selectedExtraToppings.includes(topping) ? <CheckmarkImage src={checkmark} alt="checked" /> : null}
+      </StyledBoxInput>
+      <p>{topping}</p>
+      <p>${extraToppings[topping].price}</p>
+    </StyledBox>
+  ))}
+</div>
       <p>${(cartItem.price * cartItem.quantity).toFixed(2)}</p>
-     
     </StyledCartItem>
   );
 })}
@@ -325,6 +394,8 @@ const Orderscreen = () => {
   </Elements>
 )}
     </StyledCartContainer>
+    </Grid>
+      </Grid>
   </StyledContainer>
       )}
       </Layout>

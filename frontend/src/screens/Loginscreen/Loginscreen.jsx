@@ -54,7 +54,10 @@ const Loginscreen = () => {
             if (response.data.access_token) {
               // Save the access token in local storage or in your app state
               localStorage.setItem('access_token', response.data.access_token);
+      
+              // Redirect the user to the dashboard or another protected route
               navigate('/admin')
+
             }
           } catch (error) {
             // Handle errors from the server

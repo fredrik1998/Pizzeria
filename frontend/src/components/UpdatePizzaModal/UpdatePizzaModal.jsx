@@ -151,10 +151,11 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
             onChange={(event) => setCountInStock(event.target.value)}
             variant="outlined"
           />
-          <input
-  type="file"
-  onChange={handleImageChange}
-/>
+          <TextField
+           type="file"
+           onChange={handleImageChange}
+           variant='outlined'
+          />
           
           <StyledButton variant="contained" onClick={handleSubmit}>
             <FaPizzaSlice/> Update

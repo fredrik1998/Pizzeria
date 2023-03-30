@@ -2,25 +2,36 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 export const StyledContainer = styled.main`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin: 20px;
+  width: 80%;
+  height: 80%;
+  margin: 0 auto;
+  margin-top: 20px;
+  @media screen and (max-width: 767px) {
+    
+    margin-left: 20px;
+  }
+`;
+
+export const StyledGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  width: 50%;
 `;
 
 export const StyledItemContainer = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 50%;
+  flex-direction: column;
+  width: 100%;
   margin-bottom: 20px;
-  gap: 20px;
 
   border-bottom: 1px solid #ccc;
 
-  @media screen and (max-width: 767px) {
-    width: 100%;
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
   }
 `;
 
@@ -28,11 +39,12 @@ export const StyledCartContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  gap: 20px;
-  width: 50%;
-
+  margin-top: -40px;
+  gap: 40px;
+  width: 100%;
   @media screen and (max-width: 767px) {
-    width: 100%;
+    margin-top: -10px;
+    
   }
 `;
 
@@ -45,7 +57,14 @@ export const StyledTextContainer = styled.div`
 export const StyledH1 = styled.h1`
   font-size: 32px;
   font-weight: 700;
+  margin-bottom: 20px;
 `;
+
+export const StyledH2 = styled.h2`
+font-size: 32px;
+font-weight: 700;
+
+`
 
 export const StyledText = styled.p`
   font-size: 18px;
@@ -74,23 +93,22 @@ export const StyledLink = styled(Link)`
 
 export const StyledButton = styled.button`
 font-size: 16px;
-width: 50%;
+width: 100%;
+max-width: 200px;
 border-radius: 18px;
 font-weight: 700;
 letter-spacing: 0.1rem;
-padding: 10px;
 border: none;
 color: #fafafa;
+margin-bottom: 10px;
 padding: 15px;
-background-color: hsl(180, 29%, 50%);
+background-color: #c8102e;
 cursor: pointer;
 :disabled{
   background-color: #ccc;
   cursor: not-allowed;
 }
-@media screen and (max-width: 767px) {
-width: 100%;
-}
+
 `;
 
 export const StyledTextButtonContainer = styled.div`
@@ -115,11 +133,12 @@ border-radius: 18px;
 width: 50%;
 font-weight: 700;
 letter-spacing: 0.1rem;
-padding: 10px;
+margin-top: 20px;
 border: none;
 color: #fafafa;
-padding: 20px;
-background-color: hsl(180, 29%, 50%);
+padding: 15px;
+background-color: #c8102e;
+margin-bottom: 20px;
 cursor: pointer;
 `
 export const StyledButtonContainer = styled.div`
@@ -186,8 +205,9 @@ border: none;
 color: #fafafa;
 padding: 20px;
 margin-top: 20px;
-background-color: hsl(180, 29%, 50%);
+background-color: #c8102e;
 cursor: pointer;
+margin-bottom: 20px;
 `
 export const ErrorMessage = styled.p`
 color: red;
@@ -204,3 +224,39 @@ export const StyledOrderItems = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
 `;
+
+export const StyledBox = styled.div`
+display: flex;
+gap: 10px;
+width: 100%;
+height: 50px;
+margin-top: 50px;
+border-radius: 10px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+padding: 14px;
+margin-right: 2em;
+cursor: pointer;`
+
+export const StyledBoxInput = styled.button`
+ display: none;
+ background-color: none;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+`;
+
+export const CheckmarkImage = styled.img`
+background-color: green;
+display: flex;
+justify-content: center;
+align-items: center;
+margin-left: -8px;
+width: 20px;
+height: 20px;
+cursor: pointer;
+border-radius: 5px;
+`

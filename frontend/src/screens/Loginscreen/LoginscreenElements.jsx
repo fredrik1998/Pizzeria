@@ -46,11 +46,12 @@ font-size: 16px;
 border-radius: 18px;
 font-weight: 700;
 letter-spacing: 0.1rem;
+margin-top: 40px;
 padding: 10px;
 border: none;
 color: #fafafa;
 padding: 20px;
-background-color: hsl(180, 29%, 50%);
+background-color: #c8102e;
 cursor: pointer;
 `
 export const StyledInput = styled.input`
@@ -70,7 +71,11 @@ text-decoration: none;
 font-size: 16px;
 color: #121212;
 font-weight: 700;
+margin-top: 40px;
 `
 export const StyledError = styled.p`
+display: flex;
+align-self: flex-end;
+margin-top: 10px;
 color: red;
 font-size: 16px;`

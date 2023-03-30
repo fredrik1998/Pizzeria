@@ -16,7 +16,7 @@ const Loader = () => {
     borderRadius: "50%",
     margin: "0 10px",
     opacity: 0.3,
-    backgroundColor: "#5ba4a4",
+    backgroundColor: "#c8102e",
   };
 
   const dotVariants = (delay) => ({

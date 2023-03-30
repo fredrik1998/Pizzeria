@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { StyledWrapper, StyledButton } from './AdminElements'
 import {FaTrash } from 'react-icons/fa'
 import UpdatePizzaModal from '../../components/UpdatePizzaModal/UpdatePizzaModal'
+import Layout from '../../components/Layout'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -88,6 +89,7 @@ const Adminscreen = () => {
 
   return (
     <StyledWrapper>
+      <Layout>
     <Header/>
     <h1>Pizzas</h1>
     <AddPizzaModal addNewPizza={addNewPizza}>Add Pizza</AddPizzaModal>
@@ -168,7 +170,7 @@ const Adminscreen = () => {
         })}
       </TableBody>
     </Table>
-
+    </Layout>
     </StyledWrapper>
   )
 }

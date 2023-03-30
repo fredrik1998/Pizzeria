@@ -8,6 +8,10 @@ export const StyledContainer = styled.div`
 export const StyledImage = styled.img`
   width: 100%;
   height: 50vh;
+  @media screen and (max-width: 821px) {
+    height: 40vh;
+    
+  }
 `;
 
 export const StyledH1 = styled.h1`
@@ -45,6 +49,5 @@ export const StyledDesc = styled.p`
 font-size: 20px;
 font-weight: 700;
 color: #121212;
-font-style: italic;
-letter-spacing: .2rem;
+letter-spacing: .1rem;
 `

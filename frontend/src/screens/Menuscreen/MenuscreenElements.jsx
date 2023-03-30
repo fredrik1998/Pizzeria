@@ -2,24 +2,38 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+  @media screen and (max-width: 767px) {
+    width: 80%;
+    margin: 20px;
+    
+  }
 `;
 
 export const GridContainer = styled.div`
-  display: grid;
-grid-template-columns: repeat(2, 1fr);
-@media (max-width: 1100px) {
-    grid-template-columns: 1fr;
+   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  margin: 20px;
+  @media screen and (max-width: 767px) {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
   }
 `;
 
 export const GridItem = styled.div`
-  margin: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 50%;
+  margin: 0 auto;
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    margin: none;
+    
+  }
 `;
 
 export const StyledH1 = styled.h1`
@@ -36,8 +50,8 @@ margin-bottom: 24px;
 font-weight: 700;
 `
 export const StyledImage = styled.img`
-width: 200px;
-height: 200px;
+width: 100%;
+height: 150px;
 margin-bottom: 24px;
 border-radius: 10px;
 `
@@ -55,6 +69,6 @@ border: none;
 color: #fafafa;
 padding: 20px;
 margin-top: 20px;
-background-color: hsl(180, 29%, 50%);
+background-color: #c8102e;
 cursor: pointer;
 `

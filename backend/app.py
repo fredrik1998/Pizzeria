@@ -248,8 +248,6 @@ def update_pizza(id):
     return jsonify(pizza_dict), 200
 
 
-
-
 @app.route('/api/menu/delete/<int:id>', methods=['DELETE'])
 def delete_pizza(id):
     pizza = Menu.query.get_or_404(id)

@@ -51,7 +51,7 @@ const Success = () => {
             <StyledUl>
               {Array.isArray(orderDetails.items) && orderDetails.items.map((item) => (
                 <StyledLi key={item.id}>
-                <StyledImg src={item.image_path} /> {item.name} {item.quantity} X ${item.price} =   ${item.price * item.quantity}
+                {item.name} {item.quantity} X ${item.price} =   ${item.price * item.quantity}
                 </StyledLi>
               ))}
             </StyledUl>

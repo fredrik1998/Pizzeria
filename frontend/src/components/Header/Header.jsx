@@ -1,7 +1,15 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { StyledHeader, StyledLink, StyledSeperator, StyledImg, StyledSpan, StyledCart } from './HeaderElements';
+import { 
+  StyledHeader,
+  StyledLink, 
+  StyledSeperator,
+  StyledImg,
+  StyledSpan,
+  StyledCart,
+  StyledLinkOrder
+ } from './HeaderElements';
 import img from '../../../public/pizzaicon.png'
-import { FaShoppingBasket } from 'react-icons/fa';
+import { FaShoppingBasket, FaPizzaSlice } from 'react-icons/fa';
 import { CartContext } from '../../CartContext';
 
 const Header = () => {
@@ -25,6 +33,13 @@ const Header = () => {
        </StyledCart>
       ) : (
         null  
+      )}
+      {location === '/menu' ? (
+        <StyledLinkOrder to='/order'>
+          Order here
+          </StyledLinkOrder>
+      ) : (
+        null
       )}
      
     </StyledHeader>

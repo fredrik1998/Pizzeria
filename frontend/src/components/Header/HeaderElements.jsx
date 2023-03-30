@@ -16,6 +16,22 @@ color: #000;
 margin-top: 10px;
 text-decoration: none;
 `
+export const StyledLinkOrder = styled(Link)`
+font-size: 16px;
+text-decoration: none;
+border-radius: 18px;
+width: 100%;
+max-width: 150px;
+text-align: center;
+font-weight: 700;
+letter-spacing: 0.1rem;
+border: none;
+color: #fafafa;
+padding: 15px;
+margin-top: 15px;
+background-color: #c8102e;
+cursor: pointer;
+`
 
 export const StyledCart = styled.div`
 margin-top: 20px

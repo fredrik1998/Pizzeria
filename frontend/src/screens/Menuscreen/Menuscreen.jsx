@@ -30,7 +30,7 @@ const Menuscreen = () => {
     <Loader/>
   ) : (
     <StyledWrapper>
-      <StyledLink to='/order'>Order here</StyledLink>
+    
       <GridContainer>
         <>
           {menuData.map((menuItem) => {

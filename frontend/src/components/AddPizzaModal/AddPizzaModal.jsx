@@ -18,7 +18,7 @@ cursor: pointer;
 color: #fafafa;
 padding: 15px;
 margin-bottom: 20px;
-background-color: hsl(180, 29%, 50%);
+background-color: #c8102e;
 `;
 
 const AddPizzaModal = ({addNewPizza}) => {
@@ -83,6 +83,7 @@ const AddPizzaModal = ({addNewPizza}) => {
             width: 400,
             bgcolor: '#f3f0dd',
             boxShadow: 24,
+            borderRadius: 5,
             p: 4,
             '& .MuiTextField-root': {
               mb: 2,
@@ -94,6 +95,7 @@ const AddPizzaModal = ({addNewPizza}) => {
             },
           }}
         >
+          <h1>Create Pizza</h1>
           <TextField
             label="Name"
             value={name}
@@ -136,11 +138,11 @@ const AddPizzaModal = ({addNewPizza}) => {
             onChange={(event) => setCountInStock(event.target.value)}
             variant="outlined"
           />
-           <input
-  type="file"
-  onChange={handleImageChange}
-/>
-
+           <TextField
+           type="file"
+           onChange={handleImageChange}
+           variant='outlined'
+          />
           
           <StyledButton variant="contained" onClick={handleSubmit}>
             <FaPizzaSlice/>Create

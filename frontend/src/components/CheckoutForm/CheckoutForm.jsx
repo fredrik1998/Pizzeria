@@ -37,7 +37,8 @@ border: none;
 color: #fafafa;
 padding: 20px;
 margin-top: 20px;
-background-color: hsl(180, 29%, 50%);
+margin-bottom: 20px;
+background-color: #c8102e;
 cursor: pointer;
 `;
 
