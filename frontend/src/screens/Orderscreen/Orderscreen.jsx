@@ -35,7 +35,6 @@ import {
   StyledBox,
   StyledBoxInput,
   CheckmarkImage,
-
   StyledH5,
   StyledText
 } from './OrderscreenElements';
@@ -57,11 +56,10 @@ const Orderscreen = () => {
   const [orderId, setOrderId] = useState(null);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false)
-  const [selectedExtraToppings, setSelectedExtraToppings] = useState([]);
-  const [isChecked, setIsChecked] = useState({});
   const [pizzaToppings, setPizzaToppings] = useState({});
   const [openAccordion, setOpenAccordion] = useState(null);
   const [uniqueId, setUniqueId] = useState('')
+  const [tempToppings, setTempToppings] = useState({});
 
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -75,28 +73,26 @@ const Orderscreen = () => {
     phone: '',
   })
 
-  const addToCart = (item, selectedToppings) => {
-    setOpenAccordion(null);
-  
-    const existingCartItemIndex = cartItems.findIndex(
-      (cartItem) => cartItem.id === item.id && cartItem.toppings === selectedToppings
-    );
+  let uniqueIdCounter = 0;
 
-    if (existingCartItemIndex !== -1) {
+const generateUniqueId = () => {
+  uniqueIdCounter += 1;
+  return `item-${uniqueIdCounter}`;
+};
+
+  const addToCart = (item) => {
+    const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.id === item.id && JSON.stringify(cartItem.toppings) === JSON.stringify(item.toppings));
+  
+    if (existingItemIndex !== -1) {
       const updatedCartItems = [...cartItems];
-      updatedCartItems[existingCartItemIndex] = {
-        ...updatedCartItems[existingCartItemIndex],
-        quantity: updatedCartItems[existingCartItemIndex].quantity + 1,
+      updatedCartItems[existingItemIndex] = {
+        ...updatedCartItems[existingItemIndex],
+        uniqueId: generateUniqueId(),
+        quantity: updatedCartItems[existingItemIndex].quantity + 1,
       };
       setCartItems(updatedCartItems);
     } else {
-      const newCartItem = {
-        ...item,
-        uniqueId: setUniqueId(uuidv4()),
-        quantity: 1,
-        toppings: selectedToppings,
-      };
-      setCartItems([...cartItems, newCartItem]);
+      setCartItems([...cartItems, { ...item, uniqueId: generateUniqueId(), quantity: 1 }]);
     }
   };
   
@@ -146,78 +142,24 @@ const Orderscreen = () => {
   };
 
   const handleAddOnsEvent = (topping, itemId, uniqueId) => {
-    const index = selectedExtraToppings[uniqueId]?.indexOf(topping);
-  
-    const itemInCart = cartItems.find((item) => item.id === itemId );
-  
-    if (itemInCart) {
-      return;
-    }
-  
-    if (!isChecked[uniqueId]?.[topping]) {
-      setSelectedExtraToppings({
-        ...selectedExtraToppings,
-        [uniqueId]: [...(selectedExtraToppings[uniqueId] || []), topping],
-      });
-  
-      setPizzaToppings((prevToppings) => ({
-        ...prevToppings,
-        [itemId]: [...(prevToppings[itemId] || []), topping],
-      }));
-  
-      setIsChecked((prevChecked) => ({
-        ...prevChecked,
-        [uniqueId]: {
-          ...(prevChecked[uniqueId] || {}),
-          [topping]: true,
-        },
-      }));
-    } else {
-      setSelectedExtraToppings({
-        ...selectedExtraToppings,
-        [uniqueId]: selectedExtraToppings[uniqueId].filter((item) => item !== topping),
-      });
-  
-      setPizzaToppings((prevToppings) => ({
-        ...prevToppings,
-        [itemId]: prevToppings[itemId]
-          ? prevToppings[itemId].filter((item) => item !== topping)
-          : [],
-      }));
-  
-      setIsChecked((prevChecked) => ({
-        ...prevChecked,
-        [uniqueId]: {
-          ...(prevChecked[uniqueId] || {}),
-          [topping]: !prevChecked[uniqueId]?.[topping],
-        },
-      }));
-    }
+    const currentToppings = tempToppings[uniqueId] || [];
+    const updatedToppings = currentToppings.includes(topping)
+      ? currentToppings.filter((t) => t !== topping)
+      : [...currentToppings, topping];
+    setTempToppings({ ...tempToppings, [uniqueId]: updatedToppings });
   };
   
   const calculateTotal = () => {
-    let itemPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
-    let toppingsPrice = cartItems.reduce((acc, item) => {
-      const pizzaId = item.id;
-      const selectedToppings = pizzaToppings[pizzaId] || [];
-    
-      return acc + selectedToppings.reduce((total, topping) => {
+    return cartItems.reduce((acc, item) => {
+      const itemPrice = parseFloat(item.price) * item.quantity;
+      const toppingsPrice = item.toppings.reduce((total, topping) => {
         return total + extraToppings[topping].price;
       }, 0) * item.quantity;
+  
+      return acc + itemPrice + toppingsPrice;
     }, 0);
-    
-    return itemPrice + toppingsPrice;
   };
-
-  const resetPizzaToppings = (itemId) => {
-  setPizzaToppings((prevToppings) => {
-    const newPizzaToppings = { ...prevToppings };
-    newPizzaToppings[itemId] = [];
-
-    return newPizzaToppings;
-  });
-};
-
+  
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
@@ -355,7 +297,8 @@ const Orderscreen = () => {
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
     <h4>Extra Toppings</h4>
     {Object.keys(extraToppings).map((topping, index) => {
-      const isChecked = (pizzaToppings[item.id] || []).includes(topping);
+      const isChecked = (tempToppings[uniqueId] || []).includes(topping);
+
       return (
         <StyledBox key={index} onClick={() => handleAddOnsEvent(topping, item.id, uniqueId)}>
           <StyledBoxInput type='button'>
@@ -368,7 +311,7 @@ const Orderscreen = () => {
     })}
   </div>
   <StyledTextButtonContainer style={{ marginTop: '16px' }}>
-    <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
+    <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart({ ...item, toppings: tempToppings[uniqueId] || [] })}>Add to cart</StyledButton>
   </StyledTextButtonContainer>
 </Accordion>
         </StyledTextContainer>
@@ -404,11 +347,12 @@ const Orderscreen = () => {
       </StyledButtonContainer>
       <StyledH5>Additional Toppings</StyledH5>
       <StyledTextContainer>
-        {pizzaToppings[cartItem.id].map((topping, index) => (
-          <div key={index} className="column">
-            <StyledText>{topping}</StyledText>
-          </div>
-        ))}
+      {cartItem.toppings.map((topping, index) => (
+  <div key={index} className="column">
+    <StyledText>{topping}</StyledText>
+  </div>
+))}
+
       </StyledTextContainer>
     </StyledCartItem>
   );
