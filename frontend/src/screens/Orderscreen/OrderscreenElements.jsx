@@ -14,7 +14,7 @@ export const StyledContainer = styled.main`
 
 export const StyledGridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   width: 50%;
 `;
@@ -25,7 +25,7 @@ export const StyledItemContainer = styled.div`
   width: 100%;
   margin-bottom: 20px;
 
-  border-bottom: 1px solid #ccc;
+
 
   @media screen and (min-width: 768px) {
     flex-direction: row;
@@ -119,7 +119,8 @@ export const StyledTextButtonContainer = styled.div`
 
 
 export const StyledCartItem = styled.div`
-
+display: flex;
+flex-direction: column;
 `
 
 export const StyledTotal = styled.p`
@@ -227,12 +228,11 @@ export const StyledOrderItems = styled.div`
 
 export const StyledBox = styled.div`
 display: flex;
+justify-content: flex-start;
 gap: 10px;
 width: 100%;
 height: 50px;
-margin-top: 50px;
 border-radius: 10px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 padding: 14px;
 margin-right: 2em;
 cursor: pointer;`
@@ -259,4 +259,15 @@ width: 20px;
 height: 20px;
 cursor: pointer;
 border-radius: 5px;
+`
+
+export const StyledToppings = styled.p`
+font-size: 16px;
+gap: 20px;
+`
+export const StyledUl = styled.ul`
+display: flex;
+justify-content: center;
+align-items: center;
+flex-direction: column;
 `

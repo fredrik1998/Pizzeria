@@ -160,10 +160,15 @@ const Adminscreen = () => {
               <StyledTableCell>{data.customer_email}</StyledTableCell>
               <StyledTableCell>{data.customer_phone}</StyledTableCell>
               {Array.isArray(data.items) && data.items.map((item) => (
-                <div>
-                <StyledTableCell key={item.id}>{item.name} {item.quantity}x</StyledTableCell>
-                </div>
-              ))}
+  <div>
+    <StyledTableCell key={item.id}>
+      {item.name} {item.quantity}x
+      {item.selectedToppings && Array.isArray(item.selectedToppings) && item.selectedToppings.length > 0 ? (
+        <div>Selected Toppings: {item.selectedToppings.join(', ')}</div>
+      ) : null}
+    </StyledTableCell>
+  </div>
+))}
               <StyledTableCell>${data.total_price}</StyledTableCell>
             </StyledTableRow>
           )

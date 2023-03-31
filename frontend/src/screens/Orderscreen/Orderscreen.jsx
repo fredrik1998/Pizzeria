@@ -6,8 +6,10 @@ import { CardElement, Elements, useStripe, useElements } from '@stripe/react-str
 import GlobalStyle from '../../GlobalStyles';
 import CheckoutForm from '../../components/CheckoutForm/CheckoutForm';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import Header from '../../components/Header/Header';
-import { Grid } from "@mui/material";
+import { Grid, Accordion, AccordionSummary } from "@mui/material";
+import {FaArrowDown} from 'react-icons/fa'
 import {
   StyledContainer,
   StyledItemContainer,
@@ -32,7 +34,9 @@ import {
   StyledGridContainer,
   StyledBox,
   StyledBoxInput,
-  CheckmarkImage
+  CheckmarkImage,
+  StyledUl,
+  StyledText
 } from './OrderscreenElements';
 
 import { FaPlus, FaMinus  } from 'react-icons/fa'
@@ -53,8 +57,10 @@ const Orderscreen = () => {
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false)
   const [selectedExtraToppings, setSelectedExtraToppings] = useState([]);
-
-  const [isChecked, setIsChecked] = useState([]);
+  const [isChecked, setIsChecked] = useState({});
+  const [pizzaToppings, setPizzaToppings] = useState({});
+  const [openAccordion, setOpenAccordion] = useState(null);
+  const [uniqueId, setUniqueId] = useState('')
 
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -68,45 +74,51 @@ const Orderscreen = () => {
     phone: '',
   })
 
- 
-  const addToCart = (item) => {
-    const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
+  const addToCart = (item, selectedToppings) => {
+    setOpenAccordion(null);
   
-    if (existingItem) {
-      if (existingItem.quantity < item.countInStock) {
-        setCartItems(
-          cartItems.map((cartItem) =>
-            cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-          )
-        );
-      } else {
-        console.log('Cannot add more items. Maximum stock reached.');
-      }
+    const existingCartItemIndex = cartItems.findIndex(
+      (cartItem) => cartItem.id === item.id && cartItem.toppings === selectedToppings
+    );
+
+    if (existingCartItemIndex !== -1) {
+      const updatedCartItems = [...cartItems];
+      updatedCartItems[existingCartItemIndex] = {
+        ...updatedCartItems[existingCartItemIndex],
+        quantity: updatedCartItems[existingCartItemIndex].quantity + 1,
+      };
+      setCartItems(updatedCartItems);
     } else {
-      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+      const newCartItem = {
+        ...item,
+        uniqueId: setUniqueId(uuidv4()),
+        quantity: 1,
+        toppings: selectedToppings,
+      };
+      setCartItems([...cartItems, newCartItem]);
     }
   };
+  
   
   const removeFromCart = (item) => {
-    const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
+    const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.uniqueId === item.uniqueId);
   
-    if (existingItem) {
-      if (existingItem.quantity > 1) {
-        setCartItems(
-          cartItems.map((cartItem) =>
-            cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-          )
-        );
+    if (existingItemIndex !== -1) {
+      const updatedCartItems = [...cartItems];
+  
+      if (updatedCartItems[existingItemIndex].quantity > 1) {
+        updatedCartItems[existingItemIndex] = {
+          ...updatedCartItems[existingItemIndex],
+          quantity: updatedCartItems[existingItemIndex].quantity - 1,
+        };
       } else {
-        setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+        updatedCartItems.splice(existingItemIndex, 1);
       }
+  
+      setCartItems(updatedCartItems);
     }
   };
-
-  
-  
-  
-
+      
   const handleCheckout = () => {
     setShowCheckoutForm(true);
   };
@@ -117,7 +129,6 @@ const Orderscreen = () => {
     },
     'Breasola': {
       price: 2,
-      
     },
     'Burrata': {
       price: 2,
@@ -131,34 +142,90 @@ const Orderscreen = () => {
     'Salami': {
       price: 2,
     },
-
   };
 
-  const handleAddOnsEvent = (topping) => {
-    const index = selectedExtraToppings.indexOf(topping);
-    if (index === -1) {
-      setSelectedExtraToppings([...selectedExtraToppings, topping]);
-      setIsChecked([...isChecked, true]); 
-    } else {
-      setSelectedExtraToppings(selectedExtraToppings.filter((item) => item !== topping));
-      setIsChecked([...isChecked.slice(0, index), ...isChecked.slice(index + 1)]);
-    }
-  };
-
-  const itemPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
-  const toppingsPrice = selectedExtraToppings.reduce((total, topping, index) => {
-    if (isChecked[index]) {
-        return total + extraToppings[topping].price;
-    } else {
-        return total;
-    }
-}, 0);
-
+  const handleAddOnsEvent = (topping, itemId, uniqueId) => {
+    // check if the item with itemId is already in the cart
+    const itemInCart = cartItems.find(item => item.id === itemId);
   
+    if (itemInCart) {
+      // item is already in the cart, toppings cannot be changed
+      return;
+    }
+  
+    const index = selectedExtraToppings[uniqueId]?.indexOf(topping);
+  
+    if (!isChecked[uniqueId]?.[topping]) {
+      setSelectedExtraToppings({
+        ...selectedExtraToppings,
+        [uniqueId]: [...(selectedExtraToppings[uniqueId] || []), topping],
+      });
+  
+      setPizzaToppings((prevToppings) => ({
+        ...prevToppings,
+        [itemId]: [...(prevToppings[itemId] || []), topping],
+      }));
+  
+      setIsChecked((prevChecked) => ({
+        ...prevChecked,
+        [uniqueId]: {
+          ...(prevChecked[uniqueId] || {}),
+          [topping]: true,
+        },
+      }));
+    } else {
+      setSelectedExtraToppings({
+        ...selectedExtraToppings,
+        [uniqueId]: selectedExtraToppings[uniqueId].filter((item) => item !== topping),
+      });
+  
+      setPizzaToppings((prevToppings) => ({
+        ...prevToppings,
+        [itemId]: prevToppings[itemId]
+          ? prevToppings[itemId].filter((item) => item !== topping)
+          : [],
+      }));
+  
+      setIsChecked((prevChecked) => ({
+        ...prevChecked,
+        [uniqueId]: {
+          ...(prevChecked[uniqueId] || {}),
+          [topping]: !prevChecked[uniqueId]?.[topping],
+        },
+      }));
+    }
+  };
+  
+  
+  
+  
+  
+  
+  
+      
   const calculateTotal = () => {
+    let itemPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
+    let toppingsPrice = cartItems.reduce((acc, item) => {
+      const pizzaId = item.id;
+      const selectedToppings = pizzaToppings[pizzaId] || [];
+    
+      return acc + selectedToppings.reduce((total, topping) => {
+        return total + extraToppings[topping].price;
+      }, 0) * item.quantity;
+    }, 0);
+    
     return itemPrice + toppingsPrice;
   };
-  
+
+  const resetPizzaToppings = (itemId) => {
+  setPizzaToppings((prevToppings) => {
+    const newPizzaToppings = { ...prevToppings };
+    newPizzaToppings[itemId] = [];
+
+    return newPizzaToppings;
+  });
+};
+
   const handleFormSubmit = (event) => {
     event.preventDefault();
 
@@ -171,6 +238,7 @@ const Orderscreen = () => {
         name: item.name,
         quantity: item.quantity,
         price: item.price,
+        selectedToppings: pizzaToppings[item.id],
         image: item.image_path,
       })),
       total_price: calculateTotal(),
@@ -252,14 +320,18 @@ const Orderscreen = () => {
       console.error(error);
     }
   };
-  
+
   useEffect(() => {
     setisDisabled(Object.keys(formErrors).length > 0)
     if(cartItems.length === 0){
       setShowCheckoutForm(false)
     }
-  }, [formErrors, cartItems])
-
+    if(!openAccordion ){
+      
+    }
+  }, [formErrors, cartItems, openAccordion,])
+  
+  
   return (
     <>
     <Layout>
@@ -280,16 +352,47 @@ const Orderscreen = () => {
           <StyledH1>{item.name}</StyledH1>
           <StyledPrice>${item.price}</StyledPrice>
           {item.countInStock <= 0 && <p>Out of Stock</p>}
+          <Accordion
+  style={{ background: 'none', boxShadow: 'none',  }}
+  expanded={openAccordion === item.id}
+  onChange={(e, isExpanded) => setOpenAccordion(isExpanded ? item.id : null)}
+  disabled={item.countInStock === 0}
+>
+<AccordionSummary
+  style={{marginTop: '-50px'}}
+  expandIcon={<FaArrowDown />}
+  aria-controls="panel1a-content"
+  id="panel1a-header"
+ 
+/>
+
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
+    <h4>Extra Toppings</h4>
+    {Object.keys(extraToppings).map((topping, index) => {
+      const isChecked = (pizzaToppings[item.id] || []).includes(topping);
+      return (
+        <StyledBox key={index} onClick={() => handleAddOnsEvent(topping, item.id, uniqueId)}>
+          <StyledBoxInput type='button'>
+            {isChecked ? <CheckmarkImage src={checkmark} alt="checked" /> : null}
+          </StyledBoxInput>
+          <p>{topping}</p>
+          <p>${extraToppings[topping].price}</p>
+        </StyledBox>
+      );
+    })}
+  </div>
+  <StyledTextButtonContainer style={{ marginTop: '16px' }}>
+    <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
+  </StyledTextButtonContainer>
+</Accordion>
         </StyledTextContainer>
-        <StyledTextButtonContainer>
-          <StyledButton disabled={item.countInStock <= 0 || showPaymentForm} onClick={() => addToCart(item)}>Add to cart</StyledButton>
-        </StyledTextButtonContainer>
+       
+
       </StyledItemContainer>
     ))}
   </StyledGridContainer>
   </Grid>
   <Grid item xs={12} md={4}>
-
         <StyledCartContainer>
           {cartItems && cartItems.length > 0 && (
             <StyledH2>Cart Checkout</StyledH2>
@@ -301,7 +404,7 @@ const Orderscreen = () => {
     <StyledCartItem key={cartItem.id}>
        <StyledButtonContainer>
        <StyledH2>
-        {cartItem.quantity}x {cartItem.name}
+       {cartItem.quantity}x {cartItem.name} {Array.isArray(cartItem.selectedToppings) && cartItem.selectedToppings.length > 0 ? cartItem.selectedToppings.join(', ') : null}
       </StyledH2>
       <CartButton
           onClick={() => removeFromCart(cartItem)}
@@ -317,18 +420,8 @@ const Orderscreen = () => {
         </CartButton>
       </StyledButtonContainer>
       <div>
-    <h4>Extra Toppings</h4>
-  {Object.keys(extraToppings).map((topping, index) => (
-    <StyledBox key={index} onClick={() => handleAddOnsEvent(topping)}>
-      <StyledBoxInput type='button'>
-        {selectedExtraToppings.includes(topping) ? <CheckmarkImage src={checkmark} alt="checked" /> : null}
-      </StyledBoxInput>
-      <p>{topping}</p>
-      <p>${extraToppings[topping].price}</p>
-    </StyledBox>
-  ))}
-</div>
-      <p>${(cartItem.price * cartItem.quantity).toFixed(2)}</p>
+        <StyledText>{pizzaToppings[cartItem.id]}</StyledText>
+      </div>
     </StyledCartItem>
   );
 })}
