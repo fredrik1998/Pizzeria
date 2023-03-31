@@ -7,7 +7,6 @@ export const StyledContainer = styled.main`
   margin: 0 auto;
   margin-top: 20px;
   @media screen and (max-width: 767px) {
-    
     margin-left: 20px;
   }
 `;
@@ -24,9 +23,6 @@ export const StyledItemContainer = styled.div`
   flex-direction: column;
   width: 100%;
   margin-bottom: 20px;
-
-
-
   @media screen and (min-width: 768px) {
     flex-direction: row;
     justify-content: space-between;
@@ -63,10 +59,17 @@ export const StyledH1 = styled.h1`
 export const StyledH2 = styled.h2`
 font-size: 32px;
 font-weight: 700;
-
 `
+export const StyledH5 = styled.h5`
+font-size: 20px;
+font-weight: 700;
+margin-bottom: 10px;
+margin-top: 20px;`
 
 export const StyledText = styled.p`
+display: flex;
+justify-content: center;
+flex-direction: column;
   font-size: 18px;
   margin-bottom: 8px;
 `;
@@ -260,7 +263,6 @@ height: 20px;
 cursor: pointer;
 border-radius: 5px;
 `
-
 export const StyledToppings = styled.p`
 font-size: 16px;
 gap: 20px;

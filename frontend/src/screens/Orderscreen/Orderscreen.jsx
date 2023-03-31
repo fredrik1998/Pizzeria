@@ -35,7 +35,8 @@ import {
   StyledBox,
   StyledBoxInput,
   CheckmarkImage,
-  StyledUl,
+
+  StyledH5,
   StyledText
 } from './OrderscreenElements';
 
@@ -145,15 +146,13 @@ const Orderscreen = () => {
   };
 
   const handleAddOnsEvent = (topping, itemId, uniqueId) => {
-    // check if the item with itemId is already in the cart
-    const itemInCart = cartItems.find(item => item.id === itemId);
+    const index = selectedExtraToppings[uniqueId]?.indexOf(topping);
+  
+    const itemInCart = cartItems.find((item) => item.id === itemId );
   
     if (itemInCart) {
-      // item is already in the cart, toppings cannot be changed
       return;
     }
-  
-    const index = selectedExtraToppings[uniqueId]?.indexOf(topping);
   
     if (!isChecked[uniqueId]?.[topping]) {
       setSelectedExtraToppings({
@@ -196,13 +195,6 @@ const Orderscreen = () => {
     }
   };
   
-  
-  
-  
-  
-  
-  
-      
   const calculateTotal = () => {
     let itemPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
     let toppingsPrice = cartItems.reduce((acc, item) => {
@@ -311,7 +303,7 @@ const Orderscreen = () => {
       const { data } = await axios.post('/api/create_payment', {
         total_price: calculateTotal(),
       }, {
-        headers: {'Contet-Type' : 'application/json'}
+        headers: {'Content-Type' : 'application/json'}
       })
       const { client_secret } = data;
       console.log(client_secret);
@@ -326,12 +318,8 @@ const Orderscreen = () => {
     if(cartItems.length === 0){
       setShowCheckoutForm(false)
     }
-    if(!openAccordion ){
-      
-    }
   }, [formErrors, cartItems, openAccordion,])
-  
-  
+
   return (
     <>
     <Layout>
@@ -363,9 +351,7 @@ const Orderscreen = () => {
   expandIcon={<FaArrowDown />}
   aria-controls="panel1a-content"
   id="panel1a-header"
- 
 />
-
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
     <h4>Extra Toppings</h4>
     {Object.keys(extraToppings).map((topping, index) => {
@@ -386,8 +372,6 @@ const Orderscreen = () => {
   </StyledTextButtonContainer>
 </Accordion>
         </StyledTextContainer>
-       
-
       </StyledItemContainer>
     ))}
   </StyledGridContainer>
@@ -399,7 +383,6 @@ const Orderscreen = () => {
           )}
           {cartItems.map((cartItem) => {
   const menuItem = orderItems.find((orderItem) => orderItem.id === cartItem.id);
-
   return (
     <StyledCartItem key={cartItem.id}>
        <StyledButtonContainer>
@@ -419,14 +402,17 @@ const Orderscreen = () => {
           <FaPlus />
         </CartButton>
       </StyledButtonContainer>
-      <div>
-        <StyledText>{pizzaToppings[cartItem.id]}</StyledText>
-      </div>
+      <StyledH5>Additional Toppings</StyledH5>
+      <StyledTextContainer>
+        {pizzaToppings[cartItem.id].map((topping, index) => (
+          <div key={index} className="column">
+            <StyledText>{topping}</StyledText>
+          </div>
+        ))}
+      </StyledTextContainer>
     </StyledCartItem>
   );
 })}
-
-
 {cartItems && cartItems.length > 0 && (
   <>
   <Layout>
@@ -459,9 +445,7 @@ const Orderscreen = () => {
               type="email"
               value={customerInfo.email}
               onChange={(event) =>
-                setCustomerInfo({ ...customerInfo, email: event.target.value })
-              }
-  
+                setCustomerInfo({ ...customerInfo, email: event.target.value })}
             />
             <ErrorMessage>{formErrors.email}</ErrorMessage>
           <StyledLabel>Phone</StyledLabel>
@@ -469,14 +453,10 @@ const Orderscreen = () => {
               type="tel"
               value={customerInfo.phone}
               onChange={(event) =>
-                setCustomerInfo({ ...customerInfo, phone: event.target.value })
-              }
-           
+                setCustomerInfo({ ...customerInfo, phone: event.target.value })}
             />
             <ErrorMessage>{formErrors.phone}</ErrorMessage>
-          
           <StyledCartButton type="submit">Submit</StyledCartButton>
-          
         </StyledForm>
         </Layout>   
   </>
