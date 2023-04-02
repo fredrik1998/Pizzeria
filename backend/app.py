@@ -14,7 +14,8 @@ import json
 import stripe
 
 load_dotenv()
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend/dist', static_url_path='/')
+
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
@@ -49,7 +50,14 @@ def send_static(path):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
-    
+
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -110,7 +118,7 @@ class User(db.Model):
         print(f'Superuser {username} has been created.')
         
 #with app.app_context():
-    #User.create_superuser('fredrik', 'fredrik1234@gmail.com', 'noob123')
+    #User.create_superuser('yolo', 'yolo123@gmail.com', 'yolo123')
 
 class Order(db.Model):
     __tablename__ = "orders"
@@ -267,8 +275,8 @@ def add_order():
     for item in items:
         pizza = Menu.query.get(item['id'])
         pizza.countInStock -= item['quantity']
-        db.session.add(pizza)  # add pizza object to session for updating
-    db.session.commit()  # commit all changes to the database
+        db.session.add(pizza)  
+    db.session.commit() 
     created_order = Order.create_order(customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items, total_price=total_price)
     return jsonify({"message": "Order created successfully.", "orderId": created_order.id}), 201
 
@@ -308,6 +316,25 @@ def get_orders():
         orders_data.append(order_data)
     return jsonify(orders_data), 200
 
+@app.route('/api/orders/user/<int:userId>', methods=['GET'])
+def get_orders_by_user_id(userId):
+    orders = Order.query.join(User, User.id == Order.user_id).filter(User.id == userId).all()
+    orders_data = []
+    for order in orders:
+        items_data = json.loads(order.items)
+
+        order_data = {
+            'id': order.id,
+            'customer_name': order.customer_name,
+            'customer_email': order.customer_email,
+            'customer_phone': order.customer_phone,
+            'items': items_data,
+            'total_price': order.total_price,
+        }
+        orders_data.append(order_data)
+    return jsonify(orders_data), 200
+
+
 @app.route('/api/create_payment', methods=['POST'])
 def create_payment():
     try:
@@ -317,7 +344,7 @@ def create_payment():
         # Convert the amount to cents
         amountInCents = amount * 100
     
-        # Create a new payment inten
+        # Create a new payment intent
         intent = stripe.PaymentIntent.create(
             amount=amountInCents,
             currency='usd',
@@ -341,19 +368,18 @@ def login():
     if not email_or_username or not password:
         return jsonify({"msg": "Missing username or password"}), 400
 
-    
     user = User.query.filter_by(email=email_or_username).first()
     
     if user is None:
         user = User.query.filter_by(username=email_or_username).first()
 
     if user and user.check_password(password):
-        access_token = create_access_token(identity=user.id)
-        return jsonify(access_token=access_token), 200
+        access_token = create_access_token(identity=user.username)
+        return jsonify(access_token=access_token, username=user.username, is_superuser=user.is_superuser == 1), 200
 
     return jsonify({"msg": "Bad username or password"}), 401
-    
 
+    
 @app.route('/api/register', methods=['POST'])
 def register():
     if not request.is_json:
@@ -373,7 +399,8 @@ def register():
         return jsonify({"msg": "Email or username already taken"}), 409
 
     hashed_password = generate_password_hash(password)
-    new_user = User(username=username, email=email, password=hashed_password)
+    new_user = User(username=username, email=email)
+    new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
 
@@ -381,5 +408,6 @@ def register():
     return jsonify(access_token=access_token, msg="User created"), 201
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
