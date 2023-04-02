@@ -15,7 +15,6 @@ import stripe
 
 load_dotenv()
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='/')
-
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
@@ -408,6 +407,6 @@ def register():
     return jsonify(access_token=access_token, msg="User created"), 201
 
 
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+#if __name__ == "__main__":
+   # app.run(host='0.0.0.0', port=5000, debug=True)
 
