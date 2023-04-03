@@ -57,12 +57,8 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
-    
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    return send_from_directory(app.static_folder, 'index.html')    
 
+    
 class Menu(db.Model):
     __tablename__ = "menu"
     id = db.Column(db.Integer, primary_key=True)
