@@ -80,18 +80,21 @@ const generateUniqueId = () => {
   return `item-${uniqueIdCounter}`;
 };
 
+const stringifyAndSortToppings = (toppings) => {
+  return JSON.stringify(toppings.slice().sort());
+};
+
 const addToCart = (item) => {
-  const existingItemsWithSameId = cartItems.filter((cartItem) => cartItem.id === item.id);
+  const existingItemsWithSameId = cartItems.filter((cartItem) => cartItem.id === item.id && stringifyAndSortToppings(cartItem.toppings) === stringifyAndSortToppings(item.toppings));
   const totalQuantityWithSameId = existingItemsWithSameId.reduce((acc, cartItem) => acc + cartItem.quantity, 0);
 
   if (totalQuantityWithSameId < item.countInStock) {
-    const existingItemIndex = existingItemsWithSameId.findIndex((cartItem) => JSON.stringify(cartItem.toppings) === JSON.stringify(item.toppings));
+    const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.id === item.id && stringifyAndSortToppings(cartItem.toppings) === stringifyAndSortToppings(item.toppings));
 
     if (existingItemIndex !== -1) {
       const updatedCartItems = [...cartItems];
       updatedCartItems[existingItemIndex] = {
         ...updatedCartItems[existingItemIndex],
-        uniqueId: generateUniqueId(),
         quantity: updatedCartItems[existingItemIndex].quantity + 1,
       };
       setCartItems(updatedCartItems);
@@ -105,24 +108,26 @@ const addToCart = (item) => {
   }
 };
 
-  const removeFromCart = (item) => {
-    const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.uniqueId === item.uniqueId);
-  
-    if (existingItemIndex !== -1) {
-      const updatedCartItems = [...cartItems];
-  
-      if (updatedCartItems[existingItemIndex].quantity > 1) {
-        updatedCartItems[existingItemIndex] = {
-          ...updatedCartItems[existingItemIndex],
-          quantity: updatedCartItems[existingItemIndex].quantity - 1,
-        };
-      } else {
-        updatedCartItems.splice(existingItemIndex, 1);
-      }
-  
-      setCartItems(updatedCartItems);
+const removeFromCart = (item) => {
+  const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.id === item.id && stringifyAndSortToppings(cartItem.toppings) === stringifyAndSortToppings(item.toppings));
+
+  if (existingItemIndex !== -1) {
+    const updatedCartItems = [...cartItems];
+
+    if (cartItems[existingItemIndex].quantity > 1) {
+      updatedCartItems[existingItemIndex] = {
+        ...updatedCartItems[existingItemIndex],
+        quantity: updatedCartItems[existingItemIndex].quantity - 1,
+      };
+    } else {
+      updatedCartItems.splice(existingItemIndex, 1);
     }
-  };
+
+    setCartItems(updatedCartItems);
+  }
+};
+
+
       
   const handleCheckout = () => {
     setShowCheckoutForm(true);
@@ -350,7 +355,7 @@ const addToCart = (item) => {
           {cartItems && cartItems.length > 0 && (
             <StyledH2>Cart Checkout</StyledH2>
           )}
-          {cartItems.map((cartItem) => {
+          {cartItems.map((cartItem, index) => {
   const menuItem = orderItems.find((orderItem) => orderItem.id === cartItem.id);
   return (
     <StyledCartItem id='cart-checkout' key={cartItem.id}>
