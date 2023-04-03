@@ -403,6 +403,17 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+    
+@app.route('/')
+@app.route('/menu')
+@app.route('/order')
+@app.route('/success/<orderId>')
+@app.route('/login')
+@app.route('/admin')
+@app.route('/register')
+@app.route('/userscreen/<userId>')
+def serve_index(orderId=None, userId=None):
+    return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
