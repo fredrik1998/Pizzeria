@@ -85,13 +85,37 @@ def create_pizzas():
         Menu.create_pizza(image_path='pizza.webp', name='Quattro Formaggi', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, gorgonzola, parmesan, emmental', description='Classic Italian pizza with four cheeses with tomato sauce, mozarella, gorgonzola, parmesan, emmental', price=12, countInStock=10)
         Menu.create_pizza(image_path='Napoli.webp', name='Napoli', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, anchovies, capers', description='Italian pizza with tomato sauce, mozarella cheese, anchovies and capers', price=13, countInStock=10)
         Menu.create_pizza(image_path='Calzone.jpg', name='Calzone', category='Pizza', size='Large', toppings='Tomato sauce, mozzarella, ham, mushrooms, peppers', description='Classic folded Italian pizza with tomato sauce, mozarella cheese, ham, mushrooms and peppers', price=13, countInStock=10)
+
+class Order(db.Model):
+    __tablename__ = "orders"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    customer_name = db.Column(db.String(80), nullable=False)
+    customer_email = db.Column(db.String(120), nullable=False)
+    customer_phone = db.Column(db.String(20), nullable=False)
+    items = db.Column(db.String(1000), nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
     
+
+    user = db.relationship("User", back_populates="orders")
+
+    @classmethod
+    def create_order(cls, user_id, customer_name, customer_email, customer_phone, items, total_price):
+        items_json = json.dumps(items)
+        order = cls(user_id=user_id, customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items_json, total_price=total_price)
+        db.session.add(order)
+        db.session.commit()
+        return order
+
 class User(db.Model):
+    __tablename__= "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     is_superuser = db.Column(db.Boolean, default = False)
+
+    orders = db.relationship("Order", back_populates="user")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -107,25 +131,7 @@ class User(db.Model):
         db.session.add(user)
         db.session.commit()
         print(f'Superuser {username} has been created.')
-        
-
-class Order(db.Model):
-    __tablename__ = "orders"
-    id = db.Column(db.Integer, primary_key=True)
-    customer_name = db.Column(db.String(80), nullable=False)
-    customer_email = db.Column(db.String(120), nullable=False)
-    customer_phone = db.Column(db.String(20), nullable=False)
-    items = db.Column(db.String(1000), nullable=False)
-    total_price = db.Column(db.Float, nullable=False)
-
-    @classmethod
-    def create_order(cls, customer_name, customer_email, customer_phone, items, total_price):
-        items_json = json.dumps(items)
-        order = cls(customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items_json, total_price=total_price)
-        db.session.add(order)
-        db.session.commit()
-        return order
-
+    
 @app.route('/api/menu', methods=['GET'])
 def get_menu():
     pizzas = Menu.query.all()
@@ -364,9 +370,17 @@ def login():
 
     if user and user.check_password(password):
         access_token = create_access_token(identity=user.username)
-        return jsonify(access_token=access_token, username=user.username, is_superuser=user.is_superuser == 1), 200
+        # Include 'userId' in the response object
+        response_data = {
+            'access_token': access_token,
+            'username': user.username,
+            'is_superuser': user.is_superuser == 1,
+            'userId': user.id,
+        }
+        return jsonify(response_data), 200
 
     return jsonify({"msg": "Bad username or password"}), 401
+
 
     
 @app.route('/api/register', methods=['POST'])

@@ -37,7 +37,7 @@ const Menuscreen = () => {
             return (
               <GridItem key={menuItem.id}>
                 <StyledH1>{menuItem.name}</StyledH1>
-                <StyledImage src={menuItem.image_path} key={menuItem.image_path} />
+                <StyledImage loading='lazy' src={menuItem.image_path} key={menuItem.image_path} />
                 <StyledText>{menuItem.description}</StyledText>
                 <StyledText>Size: {menuItem.size}</StyledText>
                 <StyledPrice>${menuItem.price}</StyledPrice>

@@ -60,6 +60,7 @@ const Orderscreen = () => {
   const [uniqueId, setUniqueId] = useState('')
   const [tempToppings, setTempToppings] = useState({});
   const [message, setMessage] = useState('')
+
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -104,8 +105,6 @@ const addToCart = (item) => {
   }
 };
 
-  
-  
   const removeFromCart = (item) => {
     const existingItemIndex = cartItems.findIndex((cartItem) => cartItem.uniqueId === item.uniqueId);
   
@@ -304,7 +303,7 @@ const addToCart = (item) => {
   <StyledGridContainer>
     {orderItems.map((item) => (
       <StyledItemContainer key={item.id}>
-        <StyledImage src={item.image_path} />
+        <StyledImage loading='lazy' src={item.image_path} />
         <StyledTextContainer>
           <StyledH1>{item.name}</StyledH1>
           <StyledPrice>${item.price}</StyledPrice>

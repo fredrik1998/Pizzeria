@@ -13,7 +13,7 @@ import {
     StyledButtonContainer,
     StyledError,
   } from './LoginscreenElements';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Layout from '../../components/Layout';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
@@ -23,6 +23,7 @@ const Loginscreen = () => {
     const [password, setPassword] = useState('')
     const [message, setMessage] = useState('')
     const {user, setUser} = useContext(UserContext)
+    const {userId} = useParams()
     
     const navigate = useNavigate()
 
@@ -58,6 +59,7 @@ const Loginscreen = () => {
               localStorage.setItem('access_token', response.data.access_token);
               localStorage.setItem('username', response.data.username);
               localStorage.setItem('admin', response.data.is_superuser);
+              const userId = response.data.userId;
       
              
               setUser({ username: response.data.username, is_superuser: response.data.is_superuser });
@@ -65,7 +67,7 @@ const Loginscreen = () => {
               if (response.data.is_superuser) {
                 navigate('/admin');
               } else {
-                navigate('/');
+                navigate(`/userscreen/${userId}`);
               }
             }
           } catch (error) {

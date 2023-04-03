@@ -78,6 +78,7 @@ const Userscreen = () => {
     const [ordersData, setOrdersData] = useState([])
     const navigate = useNavigate()
     const {userId} = useParams()
+    console.log("User ID:", userId);
 
     useEffect(() => {
         const token = localStorage.getItem('access_token')

@@ -13,6 +13,7 @@ import UpdatePizzaModal from '../../components/UpdatePizzaModal/UpdatePizzaModal
 import Layout from '../../components/Layout'
 import { useContext } from 'react'
 import { UserContext } from '../../UserContext'
+import Loader from '../../components/Loader/Loader'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -77,6 +78,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 const Adminscreen = () => {
   const [menuData, setMenuData] = useState([])
   const [ordersData, setOrdersData] = useState([])
+  const [Loading, setLoading] = useState(true)
   const location = useLocation();
   const {setUser} = useContext(UserContext)
  
@@ -99,6 +101,7 @@ const Adminscreen = () => {
       ]);
       setMenuData(menuResponse.data.menu);
       setOrdersData(ordersResponse.data);
+      setLoading(false)
     };
   
     fetchData().catch((error) => console.error('Error fetching data:', error));
@@ -132,7 +135,11 @@ const Adminscreen = () => {
     <StyledWrapper>
       <Layout>
     <Header/>
-    <h1>Pizzas</h1>
+    {Loading ? (
+      <Loader/>
+    ) : (
+      <>
+      <h1>Pizzas</h1>
     <AddPizzaModal addNewPizza={addNewPizza}>Add Pizza</AddPizzaModal>
     <Table>
       <TableHead>
@@ -216,6 +223,8 @@ const Adminscreen = () => {
         })}
       </TableBody>
     </Table>
+    </>
+    )}
     </Layout>
     </StyledWrapper>
   )
