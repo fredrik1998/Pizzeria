@@ -121,8 +121,6 @@ class User(db.Model):
         db.session.commit()
         print(f'Superuser {username} has been created.')
         
-with app.app_context():
-    User.create_superuser('yolo', 'yolo123@gmail.com', 'yolo123')
 
 class Order(db.Model):
     __tablename__ = "orders"
