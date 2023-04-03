@@ -13,7 +13,7 @@ import UpdatePizzaModal from '../../components/UpdatePizzaModal/UpdatePizzaModal
 import Layout from '../../components/Layout'
 import { useContext } from 'react'
 import { UserContext } from '../../UserContext'
-
+import Loader from '../../components/Loader/Loader'
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -78,6 +78,7 @@ const Userscreen = () => {
     const [ordersData, setOrdersData] = useState([])
     const navigate = useNavigate()
     const {userId} = useParams()
+    const [Loading, setLoading] = useState(true)
     console.log("User ID:", userId);
 
     useEffect(() => {
@@ -94,6 +95,7 @@ const Userscreen = () => {
           try {
               const ordersResponse = await axios.get(`/api/orders/user/${userId}`);
               setOrdersData(ordersResponse.data);
+              setLoading(false);
               console.log(ordersData);
           } catch (error) {
               console.log(error);
@@ -107,7 +109,11 @@ const Userscreen = () => {
     <StyledWrapper>
         <Layout>
             <Header/>
-            <h1>Your Orders</h1>
+            {Loading ? (
+              <Loader/>
+            ): (
+              <>
+              <h1>Your Orders</h1>
             <Table>
                 <TableHead>
                     <StyledTableRow>
@@ -145,6 +151,8 @@ const Userscreen = () => {
                     })}
                 </TableBody>
             </Table>
+            </>
+            )}
         </Layout>
     </StyledWrapper>
   )

@@ -100,9 +100,9 @@ class Order(db.Model):
     user = db.relationship("User", back_populates="orders")
 
     @classmethod
-    def create_order(cls, user_id, customer_name, customer_email, customer_phone, items, total_price):
+    def create_order(cls, customer_name, customer_email, customer_phone, items, total_price):
         items_json = json.dumps(items)
-        order = cls(user_id=user_id, customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items_json, total_price=total_price)
+        order = cls(customer_name=customer_name, customer_email=customer_email, customer_phone=customer_phone, items=items_json, total_price=total_price)
         db.session.add(order)
         db.session.commit()
         return order
@@ -262,6 +262,7 @@ def delete_pizza(id):
 
 @app.route('/api/order/add', methods=['POST'])
 def add_order():
+    data = request.get_json()
     customer_name = request.json['customer_name']
     customer_email = request.json['customer_email']
     customer_phone = request.json['customer_phone']

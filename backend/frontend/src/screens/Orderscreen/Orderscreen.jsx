@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
+import { useParams } from 'react-router-dom';
 import Stripe from 'stripe'
 import { CartContext } from '../../CartContext';
 import { loadStripe } from '@stripe/stripe-js'
@@ -127,8 +128,6 @@ const removeFromCart = (item) => {
   }
 };
 
-
-      
   const handleCheckout = () => {
     setShowCheckoutForm(true);
   };
