@@ -98,13 +98,12 @@ export const StyledButton = styled.button`
 font-size: 16px;
 width: 100%;
 max-width: 200px;
-border-radius: 18px;
 font-weight: 700;
-letter-spacing: 0.1rem;
-border: none;
+border: 2px solid #c8102e;
+border-radius: 4px;
 color: #fafafa;
 margin-bottom: 10px;
-padding: 15px;
+padding: 16px;
 background-color: #c8102e;
 cursor: pointer;
 :disabled{
@@ -133,14 +132,14 @@ export const StyledTotal = styled.p`
 
 export const StyledCheckoutButton = styled.button`
 font-size: 16px;
-border-radius: 18px;
-width: 50%;
+width: 100%;
+max-width: 250px;
 font-weight: 700;
-letter-spacing: 0.1rem;
+border: 2px solid #c8102e;
 margin-top: 20px;
-border: none;
+border-radius: 4px;
 color: #fafafa;
-padding: 15px;
+padding: 16px;
 background-color: #c8102e;
 margin-bottom: 20px;
 cursor: pointer;
@@ -199,15 +198,13 @@ padding: 15px;
 
 export const StyledCartButton = styled.button`
 font-size: 16px;
-border-radius: 18px;
 width: 100%;
 max-width: 500px;
 font-weight: 700;
-letter-spacing: 0.1rem;
-padding: 10px;
-border: none;
+border: 2px solid #c8102e;
 color: #fafafa;
-padding: 20px;
+padding: 16px;
+border-radius: 4px;
 margin-top: 20px;
 background-color: #c8102e;
 cursor: pointer;
@@ -216,7 +213,6 @@ margin-bottom: 20px;
 export const ErrorMessage = styled.p`
 color: red;
 `
-
 export const StyledContent = styled.div`
   display: grid;
   grid-template-columns: auto 300px;

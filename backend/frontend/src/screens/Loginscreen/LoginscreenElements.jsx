@@ -45,14 +45,14 @@ align-self: flex-end;
 `
 export const StyledButton = styled.button`
 font-size: 16px;
-border-radius: 18px;
+border-radius: 3px;
+width: 100%;
+max-width: 100px;
 font-weight: 700;
-letter-spacing: 0.1rem;
 margin-top: 40px;
-padding: 10px;
-border: none;
+padding: 15px;
+border: 2px solid #c8102e;
 color: #fafafa;
-padding: 20px;
 background-color: #c8102e;
 cursor: pointer;
 `
@@ -61,7 +61,6 @@ font-size: 16px;
 font-weight: 300;
 border-radius: 10px;
 padding: 15px;
-
 width: 100%;
 cursor: pointer;
 font-weight: 700;

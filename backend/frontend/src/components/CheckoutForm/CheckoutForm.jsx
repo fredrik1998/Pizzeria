@@ -27,7 +27,7 @@ const StyledCardElement = styled(CardElement)`
 
 const StyledButton = styled.button`
 font-size: 16px;
-border-radius: 18px;
+border-radius: 4px;
 width: 100%;
 margin: 0 auto;
 font-weight: 700;
@@ -39,6 +39,7 @@ padding: 20px;
 margin-top: 20px;
 margin-bottom: 20px;
 background-color: #c8102e;
+border: 2px solid #c8102e;
 cursor: pointer;
 `;
 

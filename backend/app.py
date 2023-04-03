@@ -376,7 +376,6 @@ def login():
 
     if user and user.check_password(password):
         access_token = create_access_token(identity=user.username)
-        # Include 'userId' in the response object
         response_data = {
             'access_token': access_token,
             'username': user.username,
