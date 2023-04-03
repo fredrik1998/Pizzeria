@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext} from 'react';
-import { useParams } from 'react-router-dom';
+import { UserContext } from '../../UserContext';
 import Stripe from 'stripe'
 import { CartContext } from '../../CartContext';
 import { loadStripe } from '@stripe/stripe-js'
@@ -50,17 +50,18 @@ const appearance = {
 };
 const stripePromise = loadStripe('pk_test_51MbkNeGJ8v9b2yrMsOEfEwwuEkzRpZOrJ2A5Wkdti8WqCdwI7b0BXIFGAwX888Qpd6K8fZG07igiitpOGOEE52Ns00Aj9fGYtL')
 const Orderscreen = () => {
+  const {user} = useContext(UserContext);
   const [orderItems, setOrderItems] = useState([]);
   const { cartItems, setCartItems } = useContext(CartContext);
-  const [isLoading, setIsLoading] = useState(true)
-  const [isDisabled, setisDisabled] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDisabled, setisDisabled] = useState(true);
   const [orderId, setOrderId] = useState(null);
   const [showCheckoutForm, setShowCheckoutForm] = useState(false);
   const [showPaymentForm, setShowPaymentForm] = useState(false)
   const [openAccordion, setOpenAccordion] = useState(null);
-  const [uniqueId, setUniqueId] = useState('')
+  const [uniqueId, setUniqueId] = useState('');
   const [tempToppings, setTempToppings] = useState({});
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
 
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -173,7 +174,9 @@ const removeFromCart = (item) => {
   
   const handleFormSubmit = (event) => {
     event.preventDefault();
-
+  
+    const userId = localStorage.getItem('userId');
+    const guestId = localStorage.getItem('guestId');
     const payload = {
       customer_name: customerInfo.name,
       customer_email: customerInfo.email,
@@ -187,10 +190,12 @@ const removeFromCart = (item) => {
         image: item.image_path,
       })),
       total_price: calculateTotal(),
+      userId: userId || '',
+      guestId: guestId || '',
     };
-
+  
     const errors = {}
-
+  
     if(!customerInfo.name){
       errors.name = 'Name is required'
     }
@@ -210,10 +215,9 @@ const removeFromCart = (item) => {
         errors.phone = "Please only enter digits"
       }
     }
-
+  
     setFormErrors(errors)
     if(Object.keys(errors).length === 0){
-
       axios.post('/api/order/add', payload, {
         headers: {'Content-Type': 'application/json'}
       })
@@ -222,22 +226,22 @@ const removeFromCart = (item) => {
         const { orderId } = response.data;
         setOrderId(orderId);
         console.log('OrderId:', orderId);
-        fetchClientSecret();
       })
       .catch((error) => {
         console.error(error);
       });
-    
-        setCartItems([]);
-        setShowCheckoutForm(false);
-        setCustomerInfo({
-          name: '',
-          email: '',
-          phone: '',
-        });
-        setShowPaymentForm(true);
-      };
+      fetchClientSecret()
+      setCartItems([]);
+      setShowCheckoutForm(false);
+      setCustomerInfo({
+        name: '',
+        email: '',
+        phone: '',
+      });
+      setShowPaymentForm(true);
     }
+  };
+  
 
   useEffect(() => {
     axios

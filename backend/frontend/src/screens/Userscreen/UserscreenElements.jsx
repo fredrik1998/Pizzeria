@@ -1,13 +1,11 @@
 import styled from "styled-components";
 
 export const StyledWrapper = styled.main`
-  background-color: #f3f0dd;
   height: 100%;
   width: 100%;
   font-family: 'League Spartan', sans-serif;
   overflow-x: hidden;
 `;
-
 
 export const StyledButton = styled.button`
   display: block;

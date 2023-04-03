@@ -108,12 +108,13 @@ const Userscreen = () => {
   return (
     <StyledWrapper>
         <Layout>
+          <GlobalStyle/>
             <Header/>
             {Loading ? (
               <Loader/>
             ): (
               <>
-              <h1>Your Orders</h1>
+              <h1 style={{marginTop: '20px', marginBottom: '20px', marginLeft: '10px'}}>Your Orders</h1>
             <Table>
                 <TableHead>
                     <StyledTableRow>
@@ -146,6 +147,10 @@ const Userscreen = () => {
                                         </StyledTableCell>
                                     </div>
                                 ))}
+                                <StyledTableCell>${data.total_price}</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
                             </StyledTableRow>
                         )
                     })}

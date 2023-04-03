@@ -60,9 +60,9 @@ const Loginscreen = () => {
               localStorage.setItem('username', response.data.username);
               localStorage.setItem('admin', response.data.is_superuser);
               const userId = response.data.userId;
-      
-             
-              setUser({ username: response.data.username, is_superuser: response.data.is_superuser });
+              localStorage.setItem('userId', response.data.userId);
+
+              setUser({ username: response.data.username, is_superuser: response.data.is_superuser, userId: userId });
 
               if (response.data.is_superuser) {
                 navigate('/admin');
