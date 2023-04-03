@@ -17,7 +17,7 @@ load_dotenv()
 app = Flask(__name__, static_folder='frontend/dist', static_url_path='/')
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_DIR, "frontend", "public")
@@ -57,6 +57,11 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+    
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    return send_from_directory(app.static_folder, 'index.html')    
 
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -79,9 +84,9 @@ class Menu(db.Model):
 @app.before_first_request
 def create_table():
     db.create_all()
-    #create_pizzas()
+    create_pizzas()
 
-#def create_pizzas():
+def create_pizzas():
     if not Menu.query.first():
         Menu.create_pizza(image_path='margarita.jpg', name='Margherita', category='Pizza', size='Medium', toppings='Tomatoes, basil, mozzarella', description='Classic Italian pizza with tomato sauce, mozzarella cheese, and basil', price=10, countInStock=10)
         Menu.create_pizza(image_path='pepperoni.jpg', name='Pepperoni', category='Pizza', size='Medium', toppings='Tomato sauce, mozzarella, pepperoni', description='Pizza with tomato sauce, mozarella cheese and pepperoni', price=11, countInStock=10)
@@ -116,8 +121,8 @@ class User(db.Model):
         db.session.commit()
         print(f'Superuser {username} has been created.')
         
-#with app.app_context():
-    #User.create_superuser('yolo', 'yolo123@gmail.com', 'yolo123')
+with app.app_context():
+    User.create_superuser('yolo', 'yolo123@gmail.com', 'yolo123')
 
 class Order(db.Model):
     __tablename__ = "orders"
