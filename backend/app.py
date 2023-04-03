@@ -50,17 +50,6 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-@app.route('/<path:path>/')
-def serve(path):
-    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
-        return send_from_directory(app.static_folder, path)
-    else:
-        return send_from_directory(app.static_folder, 'index.html')
-
-
-    
 class Menu(db.Model):
     __tablename__ = "menu"
     id = db.Column(db.Integer, primary_key=True)
@@ -407,6 +396,13 @@ def register():
     access_token = create_access_token(identity=new_user.id)
     return jsonify(access_token=access_token, msg="User created"), 201
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
