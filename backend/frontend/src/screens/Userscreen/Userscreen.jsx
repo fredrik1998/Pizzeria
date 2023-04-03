@@ -2,17 +2,12 @@ import React, { Fragment, useEffect, useState } from 'react'
 import GlobalStyle from '../../GlobalStyles'
 import Header from '../../components/Header/Header'
 import axios from 'axios'
-import {Table, TableCell, TableBody, TableRow, TableHead, Button } from '@mui/material'
+import {Table, TableCell, TableBody, TableRow, TableHead } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import {tableCellClasses} from '@mui/material'
-import AddPizzaModal from '../../components/AddPizzaModal/AddPizzaModal'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { StyledWrapper, StyledButton } from './UserscreenElements'
-import {FaTrash } from 'react-icons/fa'
-import UpdatePizzaModal from '../../components/UpdatePizzaModal/UpdatePizzaModal'
+import {useNavigate, useParams } from 'react-router-dom'
+import { StyledWrapper, StyledH1, StyledLink } from './UserscreenElements'
 import Layout from '../../components/Layout'
-import { useContext } from 'react'
-import { UserContext } from '../../UserContext'
 import Loader from '../../components/Loader/Loader'
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -112,16 +107,16 @@ const Userscreen = () => {
             <Header/>
             {Loading ? (
               <Loader/>
-            ): (
+            ) : (
               <>
-              <h1 style={{marginTop: '20px', marginBottom: '20px', marginLeft: '10px'}}>Your Orders</h1>
+              <StyledH1>Your Orders</StyledH1>
             <Table>
                 <TableHead>
                     <StyledTableRow>
                     <StyledTableCell>ID</StyledTableCell>
-                    <StyledTableCell>Customer Name</StyledTableCell>
-                    <StyledTableCell>Customer Email</StyledTableCell>
-                    <StyledTableCell>Customer Phone</StyledTableCell>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell>Email</StyledTableCell>
+                    <StyledTableCell>Phone</StyledTableCell>
                     <StyledTableCell>Items</StyledTableCell>
                     <StyledTableCell>Total Price</StyledTableCell>
                     <StyledTableCell></StyledTableCell>
@@ -130,37 +125,48 @@ const Userscreen = () => {
                     </StyledTableRow>
                 </TableHead>
                 <TableBody>
-                    {ordersData.map((data) => {
-                        return(
-                            <StyledTableRow key={data.id}>
-                                <StyledTableCell>{data.id}</StyledTableCell>
-                                <StyledTableCell>{data.customer_name}</StyledTableCell>
-                                <StyledTableCell>{data.customer_email}</StyledTableCell>
-                                <StyledTableCell>{data.customer_phone}</StyledTableCell>
-                                {Array.isArray(data.items) && data.items.map((item) => (
-                                    <div>
-                                        <StyledTableCell key={item.id}>
-                                            {item.name} {item.quantity}x
-                                            {item.selectedToppings && Array.isArray(item.selectedToppings) && item.selectedToppings.length > 0 ? (
-                                                <div>Toppings: {item.selectedToppings.join(', ')}</div>
-                                            ): null}
-                                        </StyledTableCell>
-                                    </div>
-                                ))}
-                                <StyledTableCell>${data.total_price}</StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                                <StyledTableCell></StyledTableCell>
-                            </StyledTableRow>
-                        )
+            
+                {ordersData.length === 0 ? (
+                  
+        <StyledTableCell colSpan={6}>You haven't placed any orders yet. <StyledLink to="/order">Order here!</StyledLink></StyledTableCell>
+   
+) : (
+    <>
+                {ordersData.map((data) => {
+                    return (
+                        <StyledTableRow key={data.id}>
+                            <StyledTableCell>{data.id}</StyledTableCell>
+                            <StyledTableCell>{data.customer_name}</StyledTableCell>
+                            <StyledTableCell>{data.customer_email}</StyledTableCell>
+                            <StyledTableCell>{data.customer_phone}</StyledTableCell>
+                            {Array.isArray(data.items) && data.items.map((item) => (
+                                <div key={item.id}>
+                                    <StyledTableCell>
+                                        {item.name} {item.quantity}x
+                                        {item.selectedToppings && Array.isArray(item.selectedToppings) && item.selectedToppings.length > 0 ? (
+                                            <div>Toppings: {item.selectedToppings.join(', ')}</div>
+                                        ) : null}
+                                    </StyledTableCell>
+                                </div>
+                            ))}
+                            <StyledTableCell>${data.total_price}</StyledTableCell>
+                            <StyledTableCell></StyledTableCell>
+                            <StyledTableCell></StyledTableCell>
+                            <StyledTableCell></StyledTableCell>
+                        </StyledTableRow>
+                     )
                     })}
+                    </>
+)}
                 </TableBody>
             </Table>
             </>
             )}
-        </Layout>
-    </StyledWrapper>
-  )
-}
+            </Layout>
+        </StyledWrapper>
+)}
+
+            
+ 
 
 export default Userscreen

@@ -98,7 +98,7 @@ const Loginscreen = () => {
           type='text'
           onChange={(e) => setEmail(e.target.value)}
           id='email'
-          placeholder='eg. Fredrik Andrén'
+          placeholder='eg. hello@gmail.com'
           >
           </StyledInput>
           <StyledError>{formErrors.email}</StyledError>
