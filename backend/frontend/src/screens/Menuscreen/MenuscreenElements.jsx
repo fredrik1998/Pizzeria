@@ -51,7 +51,6 @@ export const StyledImage = styled.img`
 width: 300px;
 height: 300px;
 margin-bottom: 24px;
-border-radius: 20px;
 `
 export const StyledLink = styled(Link)`
 font-size: 16px;

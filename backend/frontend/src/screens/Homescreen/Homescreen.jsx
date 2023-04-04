@@ -2,7 +2,7 @@ import React from 'react'
 import GlobalStyles from '../../GlobalStyles'
 import { StyledContainer, StyledImage, StyledH1, StyledMotto, StyledDesc, StyledDescContainer} from './HomescreenElements'
 import Navbar from '../../components/Navbar/Navbar'
-import img from '../../../public/pizzeria.webp'
+import img from '../../../public/pizzeria.jpg'
 import Layout from '../../components/Layout'
 
 const Homescreen = () => {

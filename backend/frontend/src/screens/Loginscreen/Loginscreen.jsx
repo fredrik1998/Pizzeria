@@ -93,7 +93,7 @@ const Loginscreen = () => {
           {message && <StyledError>{message}</StyledError>}
    
         <StyledTitle>Sign in</StyledTitle>
-          <StyledLabel>Email</StyledLabel>
+          <StyledLabel>Email or Username</StyledLabel>
           <StyledInput 
           type='text'
           onChange={(e) => setEmail(e.target.value)}

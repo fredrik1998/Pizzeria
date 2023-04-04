@@ -8,14 +8,13 @@ const StyledButton = styled.button`
 font-size: 16px;
 width: 10%;
 min-width: 125px;
-border-radius: 18px;
+border-radius: 4px;
 font-weight: 700;
-letter-spacing: 0.1rem;
 padding: 10px;
 border: none;
 cursor: pointer;
 color: #fafafa;
-padding: 9px;
+padding: 10px;
 margin-bottom: 20px;
 background-color: #c8102e;
 `;

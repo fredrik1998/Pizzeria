@@ -44,12 +44,17 @@ const Registerscreen = () => {
   }
   if(!email){
     errors.email = 'Email is required'
+  } else {
+    const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    if(!emailPattern.test(email)){
+      errors.email = "Please enter a valid email address"
+    }
   }
   if(!password){
     errors.password = 'Password is required'
   }
   if(!confirmPassword){
-    errors.confirmPassword = 'Confirm password is required'
+    errors.confirmPassword = 'Password is required'
   }
 
   setFormErrors(errors)

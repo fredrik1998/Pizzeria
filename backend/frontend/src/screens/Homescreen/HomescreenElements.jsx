@@ -7,7 +7,7 @@ export const StyledContainer = styled.div`
 
 export const StyledImage = styled.img`
   width: 100%;
-  height: 50vh;
+  height: 60vh;
   @media screen and (max-width: 821px) {
     height: 40vh;
     
@@ -17,7 +17,7 @@ export const StyledImage = styled.img`
 export const StyledH1 = styled.h1`
   position: absolute; 
   background: none;
-  top: 20%; 
+  top: 10%; 
   left: 50%; 
   transform: translate(-50%, -50%); 
   font-size: 7em;
@@ -29,12 +29,18 @@ export const StyledH1 = styled.h1`
 export const StyledMotto = styled.em`
 position: absolute;
 background: none;
-top: 27%;
+top: 17%;
 left: 50%;
+color: #ccc;
 transform: translate(-50%, -50%);
-font-size: 20px;
+font-size: 24px;
 font-weight: 700;
-text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);`
+text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+@media screen and (max-width: 767px){
+  font-size: 22px;
+}
+
+`
 
 export const StyledDescContainer = styled.p`
 display: flex;
