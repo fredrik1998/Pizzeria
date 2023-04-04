@@ -1,4 +1,31 @@
-import styled from "styled-components";
+import styled, {createGlobalStyle} from "styled-components";
+
+export const GlobalStyles = createGlobalStyle`
+  body {
+    background-color: #f3f0dd;
+  }
+
+  *::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    border-radius: 8px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    height: 56px;
+    border-radius: 8px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    background-color: #888;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+`;
 
 export const StyledWrapper = styled.main`
   background-color: #f3f0dd;
@@ -6,8 +33,8 @@ export const StyledWrapper = styled.main`
   width: 100%;
   font-family: 'League Spartan', sans-serif;
   overflow-x: hidden;
+  
 `;
-
 
 export const StyledButton = styled.button`
   display: block;

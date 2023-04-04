@@ -5,7 +5,7 @@ export const LoginWrapper = styled.main`
 display: flex;
 justify-content: center;
 align-items: center;
-height: 30vh;
+height: 40vh;
 flex-direction: column;
 @media screen and (max-width: 767px){
 height: 60vh

@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import GlobalStyle from '../../GlobalStyles'
 import Header from '../../components/Header/Header'
 import axios from 'axios'
 import {Table, TableCell, TableBody, TableRow, TableHead, Button } from '@mui/material'
@@ -7,13 +6,14 @@ import { styled } from '@mui/material/styles';
 import {tableCellClasses} from '@mui/material'
 import AddPizzaModal from '../../components/AddPizzaModal/AddPizzaModal'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { StyledWrapper, StyledButton } from './AdminElements'
+import { StyledWrapper, StyledButton, GlobalStyles } from './AdminElements'
 import {FaTrash } from 'react-icons/fa'
 import UpdatePizzaModal from '../../components/UpdatePizzaModal/UpdatePizzaModal'
 import Layout from '../../components/Layout'
 import { useContext } from 'react'
 import { UserContext } from '../../UserContext'
 import Loader from '../../components/Loader/Loader'
+import GlobalStyle from '../../GlobalStyles';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -133,6 +133,7 @@ const Adminscreen = () => {
 
   return (
     <StyledWrapper>
+      <GlobalStyles/>
       <Layout>
     <Header/>
     {Loading ? (
