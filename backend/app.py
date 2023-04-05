@@ -19,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
-app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static/images')
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'frontend/public')
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'img', 'webp'}
 jwt = JWTManager(app)
 db = SQLAlchemy()
@@ -176,15 +176,15 @@ def add_pizza():
     description = request.form['description']
     price = request.form['price']
     countInStock = request.form['countInStock']
+    image_path = None
 
-    image_file = request.files.get('image')
-    if image_file:
-        filename = secure_filename(image_file.filename)
-        image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        image_file.save(image_path)
-        relative_image_path = f"/{filename}"
-    else:
-        relative_image_path = f"/{filename}"
+    if 'image' in request.files:
+        image_file = request.files['image']
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(image_file.filename)
+            image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            image_file.save(image_path)
+            relative_image_path = f"/{filename}"
 
     new_pizza = Menu(
         name=name,
@@ -194,7 +194,7 @@ def add_pizza():
         description=description,
         price=price,
         countInStock=countInStock,
-        image_path=relative_image_path
+        image_path=relative_image_path if image_path else None
     )
 
     db.session.add(new_pizza)
@@ -212,6 +212,7 @@ def add_pizza():
         "countInStock": new_pizza.countInStock,
     }
     return jsonify(pizza_dict), 201
+
 
 
 @app.route('/api/menu/update/<int:id>', methods=['PUT'])
