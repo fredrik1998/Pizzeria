@@ -136,16 +136,17 @@ def get_menu():
     pizzas = Menu.query.all()
     menu_dict = {"menu": []}
     for pizza in pizzas:
-        menu_dict["menu"].append({
-            "id": pizza.id,
-            "image_path": pizza.image_path.replace("/static/images/", ""),
-            "name": pizza.name,
-            "category": pizza.category,
-            "size": pizza.size,
-            "toppings": pizza.toppings,
-            "description": pizza.description,
-            "price": pizza.price,
-            "countInStock": pizza.countInStock,
+        if pizza.image_path is not None:
+            menu_dict["menu"].append({
+                "id": pizza.id,
+                "image_path": pizza.image_path.replace("/static/images/", ""),
+                "name": pizza.name,
+                "category": pizza.category,
+                "size": pizza.size,
+                "toppings": pizza.toppings,
+                "description": pizza.description,
+                "price": pizza.price,
+                "countInStock": pizza.countInStock,
         })
     return jsonify(menu_dict)
 
