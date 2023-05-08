@@ -1,28 +1,17 @@
-import React, { useState , useEffect} from 'react';
-
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStripe, useElements, CardElement, PaymentElement} from '@stripe/react-stripe-js';
 import styled from 'styled-components';
 
-
 const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  margin-top: 30px;
+display: flex;
+flex-direction: column;
+margin-top: 30px;
 `;
 
 const StyledLabel = styled.label`
-  font-size: 16px;
-  margin-bottom: 10px;
-`;
-
-const StyledCardElement = styled(CardElement)`
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 15px;
-  margin-bottom: 20px;
+font-size: 16px;
+margin-bottom: 10px;
 `;
 
 const StyledButton = styled.button`

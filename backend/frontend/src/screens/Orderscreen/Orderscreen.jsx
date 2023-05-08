@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext} from 'react';
 import { UserContext } from '../../UserContext';
-import Stripe from 'stripe'
 import { CartContext } from '../../CartContext';
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -41,7 +40,6 @@ import {
 } from './OrderscreenElements';
 
 import { FaPlus, FaMinus  } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import checkmark from '../../assets/icon-checkmark.svg'
 import Layout from '../../components/Layout';
@@ -174,7 +172,6 @@ const removeFromCart = (item) => {
   
   const handleFormSubmit = (event) => {
     event.preventDefault();
-  
     const userId = localStorage.getItem('userId');
     const guestId = localStorage.getItem('guestId');
     const payload = {
@@ -242,15 +239,22 @@ const removeFromCart = (item) => {
     }
   };
   
-
   useEffect(() => {
-    axios
-      .get('api/menu')
+    const cancelToken = axios.CancelToken.source();
+    axios.get('api/menu', 
+    {cancelToken: cancelToken.token})
       .then((response) => {
         setOrderItems(response.data.menu);
         setIsLoading(false);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        if(axios.isCancel(error)){
+          console.log('Request cancelled')
+        }
+      });
+      return () => {
+        cancelToken.cancel();
+      }
   }, []);
 
   const [clientSecret, setClientSecret] = useState(null);
@@ -272,13 +276,13 @@ const removeFromCart = (item) => {
 
   useEffect(() => {
     setisDisabled(Object.keys(formErrors).length > 0);
-    if (cartItems.length === 0) {
+    if(cartItems.length === 0) {
       setShowCheckoutForm(false);
     }
-    if (showPaymentForm) {
+    if(showPaymentForm) {
       setOpenAccordion(false);
     }
-    if (!openAccordion) {
+    if(!openAccordion) {
       setTempToppings({});
     }
    
@@ -295,7 +299,6 @@ const removeFromCart = (item) => {
     }
   }, [cartItems])
   
-
   return (
     <>
     <Layout>
@@ -413,7 +416,7 @@ const removeFromCart = (item) => {
                   type="text"
                   value={ customerInfo.name}
                   onChange={(event) =>
-                    setCustomerInfo({ ...customerInfo, name: event.target.value })
+                  setCustomerInfo({ ...customerInfo, name: event.target.value })
                   }
                 />
                 <ErrorMessage>{formErrors.name}</ErrorMessage>
@@ -423,7 +426,7 @@ const removeFromCart = (item) => {
               type="email"
               value={customerInfo.email}
               onChange={(event) =>
-                setCustomerInfo({ ...customerInfo, email: event.target.value })}
+              setCustomerInfo({ ...customerInfo, email: event.target.value })}
             />
             <ErrorMessage>{formErrors.email}</ErrorMessage>
           <StyledLabel>Phone</StyledLabel>
@@ -431,7 +434,7 @@ const removeFromCart = (item) => {
               type="tel"
               value={customerInfo.phone}
               onChange={(event) =>
-                setCustomerInfo({ ...customerInfo, phone: event.target.value })}
+              setCustomerInfo({ ...customerInfo, phone: event.target.value })}
             />
             <ErrorMessage>{formErrors.phone}</ErrorMessage>
           <StyledCartButton type="submit">Submit</StyledCartButton>

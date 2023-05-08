@@ -9,6 +9,7 @@ import {useNavigate, useParams } from 'react-router-dom'
 import { StyledWrapper, StyledH1, StyledLink } from './UserscreenElements'
 import Layout from '../../components/Layout'
 import Loader from '../../components/Loader/Loader'
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -84,19 +85,32 @@ const Userscreen = () => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
     }, [])
-
+    
     useEffect(() => {
+      const source = axios.CancelToken.source();
+    
       const fetchData = async () => {
-          try {
-              const ordersResponse = await axios.get(`/api/orders/user/${userId}`);
-              setOrdersData(ordersResponse.data);
-              setLoading(false);
-              console.log(ordersData);
-          } catch (error) {
-              console.log(error);
+        try {
+          const ordersResponse = await axios.get(`/api/orders/user/${userId}`, {
+            cancelToken: source.token
+          });
+          setOrdersData(ordersResponse.data);
+          setLoading(false);
+          console.log(ordersData);
+        } catch (error) {
+          if (axios.isCancel(error)) {
+            console.log('Request is cancelled');
+          } else {
+            console.log(error);
           }
+        }
       };
+
       fetchData();
+    
+      return () => {
+        source.cancel('Request cancelled');
+      };
     }, [userId]);
     
   
@@ -128,7 +142,7 @@ const Userscreen = () => {
             
                 {ordersData.length === 0 ? (
                   
-        <StyledTableCell colSpan={6}>You haven't placed any orders yet. <StyledLink to="/order">Order here!</StyledLink></StyledTableCell>
+        <StyledTableCell colSpan={6}>You haven't placed any orders yet.<StyledLink to="/order">Order here!</StyledLink></StyledTableCell>
    
 ) : (
     <>

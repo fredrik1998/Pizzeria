@@ -212,6 +212,7 @@ margin-bottom: 20px;
 `
 export const ErrorMessage = styled.p`
 color: red;
+margin-top: 5px;
 `
 export const StyledContent = styled.div`
   display: grid;

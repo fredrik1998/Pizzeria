@@ -10,6 +10,7 @@ font-size: 16px;
 width: 10%;
 min-width: 75px;
 border-radius: 5px;
+margin-left: -20px;
 font-weight: 700;
 border: none;
 cursor: pointer;
@@ -67,7 +68,6 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
     console.log(response.data);
     updatePizza(response.data);
     handleClose();
@@ -75,7 +75,6 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
     console.error(error);
   }
 };
-
 
     const handleImageChange = (event) => {
       const file = event.target.files[0];
@@ -99,6 +98,7 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
             bgcolor: '#f3f0dd',
             boxShadow: 24,
             borderRadius: 5,
+            overflow: 'scroll',
             p: 4,
             '& .MuiTextField-root': {
               mb: 2,
@@ -109,7 +109,8 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
               mx: 'auto',
             },
             '@media (max-width: 960px)': {
-              width: '80%',
+              width: '60%',
+              height: '80%',
             },
           }}
         >
@@ -161,7 +162,6 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
            onChange={handleImageChange}
            variant='outlined'
           />
-          
           <StyledButton variant="contained" onClick={handleSubmit}>
             <FaPizzaSlice/> Update
           </StyledButton>

@@ -11,7 +11,6 @@ flex-direction: column;
 height: 80vh;
 }
 `
-
 export const StyledTitle = styled.h1`
 font-size: 43px;
 color: #121212;
@@ -46,7 +45,7 @@ align-self: flex-end;
 `
 export const StyledButton = styled.button`
 font-size: 16px;
-border-radius: 18px;
+border-radius: 4px;
 font-weight: 700;
 letter-spacing: 0.1rem;
 margin-top: 40px;

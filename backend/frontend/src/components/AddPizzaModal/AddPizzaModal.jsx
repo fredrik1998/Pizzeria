@@ -81,6 +81,7 @@ const AddPizzaModal = ({addNewPizza}) => {
             bgcolor: '#f3f0dd',
             boxShadow: 24,
             borderRadius: 5,
+            overflow: 'scroll',
             p: 4,
             '& .MuiTextField-root': {
               mb: 2,
@@ -91,7 +92,8 @@ const AddPizzaModal = ({addNewPizza}) => {
               mx: 'auto',
             },
             '@media (max-width: 960px)': {
-              width: '80%',
+              width: '60%',
+              height: '80%'
             },
           }}
         >

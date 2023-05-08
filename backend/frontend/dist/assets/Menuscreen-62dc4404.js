@@ -1,16 +1,11 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components'
-
-export const StyledWrapper = styled.div`
+import{d as g,r as o,j as t,F as s,a as i,L as h}from"./index-9e0b8e9a.js";import{C as r,H as f}from"./axios-3f00b8b5.js";import{s as n,G as u}from"./GlobalStyles-781d1e48.js";import{L as y}from"./Layout-e01bd0aa.js";const w=n.div`
   width: 80%;
   margin: 0 auto;
   @media screen and (max-width: 767px) {
     width: 80%;
   
   }
-`;
-
-export const GridContainer = styled.div`
+`,S=n.div`
    display: grid;
   grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
@@ -21,9 +16,7 @@ export const GridContainer = styled.div`
     align-items: center;
     flex-direction: column;
   }
-`;
-
-export const GridItem = styled.div`
+`,b=n.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,27 +26,21 @@ export const GridItem = styled.div`
     width: 100%;
     margin: none;
   }
-`;
-
-export const StyledH1 = styled.h1`
+`,z=n.h1`
 font-size: 32px;
 margin-bottom: 24px;
-`
-export const StyledText = styled.p`
+`,c=n.p`
 font-size: 18px;
 margin-bottom: 24px;
-`
-export const StyledPrice = styled.em`
+`,L=n.em`
 font-size: 24px;
 margin-bottom: 24px;
 font-weight: 700;
-`
-export const StyledImage = styled.img`
+`,k=n.img`
 width: 300px;
 height: 300px;
 margin-bottom: 24px;
-`
-export const StyledLink = styled(Link)`
+`;n(g)`
 font-size: 16px;
 text-decoration: none;
 border-radius: 18px;
@@ -69,4 +56,4 @@ padding: 20px;
 margin-top: 20px;
 background-color: #c8102e;
 cursor: pointer;
-`
+`;const v=()=>{const[d,l]=o.useState([]),[p,m]=o.useState(!0);return o.useEffect(()=>{const e=r.CancelToken.source();return r.get("/api/menu",{cancelToken:e.token}).then(a=>{const x=a.data.menu;l(x),m(!1)}).catch(a=>{r.isCancel(a)?console.log("Request cancelled"):console.log(a)}),()=>{e.cancel()}},[]),t(s,{children:i(y,{children:[t(u,{}),t(f,{}),p?t(h,{}):t(w,{children:t(S,{children:t(s,{children:d.map(e=>i(b,{children:[t(z,{children:e.name}),t(k,{loading:"lazy",src:e.image_path},e.image_path),t(c,{children:e.description}),i(c,{children:["Size: ",e.size]}),i(L,{children:["$",e.price]})]},e.id))})})})]})})};export{v as default};

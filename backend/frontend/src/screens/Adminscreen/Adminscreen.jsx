@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Header from '../../components/Header/Header'
-import axios from 'axios'
+import axios, { Axios, isCancel } from 'axios'
 import {Table, TableCell, TableBody, TableRow, TableHead, Button } from '@mui/material'
 import { styled } from '@mui/material/styles';
 import {tableCellClasses} from '@mui/material'
@@ -93,21 +93,36 @@ const Adminscreen = () => {
     }
   }, []);
 
+  const [cancelToken, setCancelToken] = useState(null);
+
   useEffect(() => {
     const fetchData = async () => {
+      const source = axios.CancelToken.source();
       const [menuResponse, ordersResponse] = await Promise.all([
-        axios.get('/api/menu'),
-        axios.get('/api/orders')
+        axios.get('/api/menu', { cancelToken: source.token }),
+        axios.get('/api/orders', { cancelToken: source.token })
       ]);
       setMenuData(menuResponse.data.menu);
       setOrdersData(ordersResponse.data);
-      setLoading(false)
+      setLoading(false);
     };
-  
-    fetchData().catch((error) => console.error('Error fetching data:', error));
-  }, []);
-  
 
+    fetchData().catch((error) => {
+      if (axios.isCancel(error)) {
+        console.log('Request is cancelled');
+      }
+    });
+
+    setCancelToken(isCancel);
+
+    return () => {
+      if (cancelToken) {
+        cancelToken.cancel();
+      }
+    };
+  }, []);
+
+  
   const handleDeletePizza = async (pizzaId) => {
     try {
       const response = await axios.delete(`/api/menu/delete/${pizzaId}`);

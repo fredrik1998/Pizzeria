@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const StyledContainer = styled.div`
-  position: relative; /* Set container to relative position */
+  position: relative;
   width: 100%;
 `;
 
@@ -10,20 +10,19 @@ export const StyledImage = styled.img`
   height: 60vh;
   @media screen and (max-width: 821px) {
     height: 40vh;
-    
   }
 `;
 
 export const StyledH1 = styled.h1`
-  position: absolute; 
-  background: none;
-  top: 10%; 
-  left: 50%; 
-  transform: translate(-50%, -50%); 
-  font-size: 7em;
-  font-weight: 700;
-  color: #fff;
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+position: absolute; 
+background: none;
+top: 10%; 
+left: 50%; 
+transform: translate(-50%, -50%); 
+font-size: 7em;
+font-weight: 700;
+color: #fff;
+text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 `;
 
 export const StyledMotto = styled.em`
@@ -39,7 +38,6 @@ text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 @media screen and (max-width: 767px){
   font-size: 22px;
 }
-
 `
 
 export const StyledDescContainer = styled.p`

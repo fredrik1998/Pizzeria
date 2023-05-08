@@ -16,22 +16,32 @@ import {
   StyledUl,
   StyledTotal,
   StyledImg,
-  StyledToppingsContainer
+  StyledToppingsContainer,
+  StyledToppingsDiv,
+  StyledItems
  } from './SuccessElements'
+
 const Success = () => {
   const { orderId } = useParams();
   const [orderDetails, setOrderDetails] = useState({ items: [] });
 
   useEffect(() => {
-    axios
-      .get(`/api/order/${orderId}`)
+    const cancelToken = axios.CancelToken.source();
+    axios.get(`/api/order/${orderId}`, {cancelToken: cancelToken.token})
       .then((response) => {
         console.log('Response:', response);
         setOrderDetails(response.data);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        if(axios.isCancel(error)){
+          console.log('Request Cancelled');
+        }
       });
+
+      return () => {
+        cancelToken.cancel();
+      }
+
   }, [orderId]);
 
   return (
@@ -51,20 +61,19 @@ const Success = () => {
             <StyledH3>Items:</StyledH3>
             <StyledUl>
   {Array.isArray(orderDetails.items) && orderDetails.items.map((item) => (
-    <StyledLi key={item.id}>
-      {item.name} {item.quantity} X ${item.price} = ${item.price * item.quantity}
+    <StyledLi key={item.id}><StyledItems><StyledImg src={item.image}></StyledImg>
+      {item.name} {item.quantity} X ${item.price} = ${item.price * item.quantity}</StyledItems>
       {item.selectedToppings && item.selectedToppings.length > 0 && (
-        <div>
+        <StyledToppingsDiv>
           <StyledH4>Toppings:</StyledH4>
           {item.selectedToppings.map((topping, index) => (
             <StyledToppingsContainer key={index}>{topping}  $2</StyledToppingsContainer>
           ))}
-        </div>
+        </StyledToppingsDiv>
       )}
     </StyledLi>
   ))}
 </StyledUl>
-
             <StyledTotal>Total: ${orderDetails.total_price}</StyledTotal>
           </StyledTextContainer>
         ) : (

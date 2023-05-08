@@ -5,13 +5,13 @@ display: flex;
 justify-content: flex-start;
 align-items: center;
 flex-direction: column;
-height: 100vh;
+height: 100svh;
 gap: 20px;
 `
 export const StyledTextContainer = styled.div`
 display: flex;
 justify-content: center;
-align-items: center;
+align-items: flex-start;
 flex-direction: column`
 
 export const StyledH2 = styled.h2`
@@ -27,6 +27,7 @@ margin-top: 20px;
 export const StyledLi = styled.li`
 display: flex;
 flex-direction: column;
+align-items: flex-start;
 text-decoration: none;
 list-style-type: none;
 margin-bottom: 40px;
@@ -38,6 +39,9 @@ text-decoration: none;
 margin-top: 20px;
 `
 export const StyledH3 = styled.h3`
+display: flex;
+align-self: flex-start;
+
 margin-top: 20px;
 font-size: 24px;
 `
@@ -54,14 +58,26 @@ text-decoration: underline;
 export const StyledImg = styled.img`
 width: 50px;
 height: 50px;
+border-radius: 4px;
 `;
 
 export const StyledH4 = styled.h4`
 font-size: 20px;
 margin-top: 20px;
 `
-
 export const StyledToppingsContainer = styled.div`
 margin-top: 20px;
 `
+export const StyledToppingsDiv = styled.div`
+display: flex;
+flex-direction: column;
+margin-top: 10px;
+`
+export const StyledItems = styled.div`
+display: flex;
+align-items: center;
+font-weight: 500;
+gap: 10px;
+`
+
 
