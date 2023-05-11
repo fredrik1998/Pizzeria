@@ -20,26 +20,31 @@ background: none
 
 const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
     const [open, setOpen] = useState(false);
-    const [id, setId] = useState(null);
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [category, setCategory] = useState('');
-    const [size, setSize] = useState('');
-    const [toppings, setToppings] = useState('');
-    const [description, setDescription] = useState('');
-    const [countInStock, setCountInStock] = useState(0);
     const [image, setImage] = useState('');
+
+    const [updatePizzaInfo, setUpdatePizzaInfo] = useState({
+    id: null,
+    name: '',
+    price: 0,
+    category: '',
+    size: '',
+    toppings: '',
+    description: '',
+    countInStock: 0,
+    });
   
     useEffect(() => {
       if (pizzaToUpdate) {
-        setId(pizzaToUpdate.id);
-        setName(pizzaToUpdate.name);
-        setPrice(pizzaToUpdate.price);
-        setCategory(pizzaToUpdate.category);
-        setSize(pizzaToUpdate.size);
-        setToppings(pizzaToUpdate.toppings);
-        setDescription(pizzaToUpdate.description);
-        setCountInStock(pizzaToUpdate.countInStock);
+        setUpdatePizzaInfo({
+          id: pizzaToUpdate.id,
+          name: pizzaToUpdate.name,
+          price: pizzaToUpdate.price,
+          category: pizzaToUpdate.category,
+          size: pizzaToUpdate.size,
+          toppings: pizzaToUpdate.toppings,
+          description: pizzaToUpdate.description,
+          countInStock: pizzaToUpdate.countInStock,
+        });
       }
     }, [pizzaToUpdate]);
   
@@ -49,13 +54,13 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
     const handleSubmit = async () => {
   try {
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('category', category);
-    formData.append('size', size);
-    formData.append('toppings', toppings);
-    formData.append('description', description);
-    formData.append('price', price);
-    formData.append('countInStock', countInStock);
+    formData.append('name', updatePizzaInfo.name);
+    formData.append('category', updatePizzaInfo.category);
+    formData.append('size', updatePizzaInfo.size);
+    formData.append('toppings', updatePizzaInfo.toppings);
+    formData.append('description', updatePizzaInfo.description);
+    formData.append('price', updatePizzaInfo.price);
+    formData.append('countInStock', updatePizzaInfo.countInStock);
 
     if (image) {
       formData.append('image', image);
@@ -63,7 +68,7 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
       formData.append('image_path', pizzaToUpdate.image_path);
     }
 
-    const response = await axios.put(`/api/menu/update/${id}`, formData, {
+    const response = await axios.put(`/api/menu/update/${updatePizzaInfo.id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -117,44 +122,51 @@ const UpdatePizzaModal = ({ updatePizza, pizzaToUpdate }) => {
         <h1>Update Pizza</h1>
           <TextField
             label="Name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={updatePizzaInfo.name}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, name: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Price"
-            value={price}
-            onChange={(event) => setPrice(event.target.value)}
+            value={updatePizzaInfo.price}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, price: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Category"
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            value={updatePizzaInfo.category}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, category: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Size"
-            value={size}
-            onChange={(event) => setSize(event.target.value)}
+            value={updatePizzaInfo.size}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, size: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Toppings"
-            value={toppings}
-            onChange={(event) => setToppings(event.target.value)}
+            value={updatePizzaInfo.toppings}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, toppings: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
+            value={updatePizzaInfo.description}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, description: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Count In Stock"
-            value={countInStock}
-            onChange={(event) => setCountInStock(event.target.value)}
+            value={updatePizzaInfo.countInStock}
+            onChange={(event) =>
+            setUpdatePizzaInfo({...updatePizzaInfo, countInStock: event.target.value})}
             variant="outlined"
           />
           <TextField

@@ -18,14 +18,12 @@ import {
 import { useNavigate } from 'react-router-dom'
 
 const Registerscreen = () => {
-  const [username, setUsername] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const {user, setUser} = useContext(UserContext)
-
-  const navigate = useNavigate()
+  const [registerForm, setRegisterForm] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
 
   const [formErrors, setFormErrors] = useState({
     username: '',
@@ -34,58 +32,62 @@ const Registerscreen = () => {
     confirmPassword: '',
   })
 
- const submitHandler = async (event) => {
-  event.preventDefault()
+  const [message, setMessage] = useState('')
+  const {user, setUser} = useContext(UserContext)
 
-  const errors = {};
+  const navigate = useNavigate()
+  const submitHandler = async (event) => {
+    event.preventDefault()
 
-  if(!username){
-    errors.username = 'Username is required'
-  }
-  if(!email){
-    errors.email = 'Email is required'
-  } else {
-    const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-    if(!emailPattern.test(email)){
-      errors.email = "Please enter a valid email address"
+    const errors = {};
+
+    if(!registerForm.username){
+      errors.username = 'Username is required'
     }
-  }
-  if(!password){
-    errors.password = 'Password is required'
-  }
-  if(!confirmPassword){
-    errors.confirmPassword = 'Password is required'
-  }
-
-  setFormErrors(errors)
-
-  if(confirmPassword !== password){
-    setMessage('Password does not match')
-  }
-
-  if(Object.keys(errors).length === 0){
-    try{
-      const response = await axios.post('/api/register',{
-        username: username,
-        email: email,
-        password: password,
-      })
-      if(response.data.access_token){
-        localStorage.setItem('access_token', response.data.access_token)
-        localStorage.setItem('username', response.data.username)
-  
-        setUser({username: response.data.username})
-        navigate('/')
-      }  
-    } catch(error){
-      if(error.response){
-        setMessage(`Register failed: ${error.response.data.message}`)
-      } else {
-        setMessage('Register failed. Please check your inputs and try again.')
+    if(!registerForm.email){
+      errors.email = 'Email is required'
+    } else {
+      const emailPattern = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+      if(!emailPattern.test(registerForm.email)){
+        errors.email = "Please enter a valid email address"
       }
     }
-  }
- }  
+    if(!registerForm.password){
+      errors.password = 'Password is required'
+    }
+    if(!registerForm.confirmPassword){
+      errors.confirmPassword = 'Password is required'
+    }
+
+    setFormErrors(errors)
+
+    if(registerForm.confirmPassword !== registerForm.password){
+      setMessage('Password does not match')
+    }
+
+    if(Object.keys(errors).length === 0){
+      try{
+        const response = await axios.post('/api/register',{
+          username: registerForm.username,
+          email: registerForm.email,
+          password: registerForm.password,
+        })
+        if(response.data.access_token){
+          localStorage.setItem('access_token', response.data.access_token)
+          localStorage.setItem('username', response.data.username)
+    
+          setUser({username: response.data.username})
+          navigate('/')
+        }  
+      } catch(error){
+        if(error.response){
+          setMessage(`Register failed: ${error.response.data.message}`)
+        } else {
+          setMessage('Register failed. Please check your inputs and try again.')
+        }
+      }
+    }
+  }  
   return (
     <>
     <Layout>
@@ -98,8 +100,9 @@ const Registerscreen = () => {
       <StyledLabel>Username</StyledLabel>
       <StyledInput
       type='text'
-      onChange={(e) => setUsername(e.target.value)}
-      value={username}
+      onChange={(e) => 
+      setRegisterForm({...registerForm, username: e.target.value})}
+      value={registerForm.username}
       id='username'
       placeholder='eg. yolo1998'
       >
@@ -108,8 +111,9 @@ const Registerscreen = () => {
       <StyledLabel>Email</StyledLabel>
       <StyledInput
       type='text'
-      onChange={(e) => setEmail(e.target.value)}
-      value={email}
+      onChange={(e) => 
+      setRegisterForm({...registerForm, email: e.target.value})}
+      value={registerForm.email}
       id='email'
       placeholder='eg. yolo1998@gmail.com'
       >
@@ -118,8 +122,9 @@ const Registerscreen = () => {
       <StyledLabel>Password</StyledLabel>
       <StyledInput
       type='password'
-      onChange={(e) => setPassword(e.target.value)}
-      value={password}
+      onChange={(e) =>
+      setRegisterForm({...registerForm, password: e.target.value})}
+      value={registerForm.password}
       id='password'
       >
       </StyledInput>
@@ -127,8 +132,9 @@ const Registerscreen = () => {
       <StyledLabel>Confirm Password</StyledLabel>
       <StyledInput
       type='password'
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      value={confirmPassword}
+      onChange={(e) =>
+      setRegisterForm({...registerForm, confirmPassword: e.target.value})}
+      value={registerForm.confirmPassword}
       id='confirmPassword'
       ></StyledInput>
       <StyledError>{formErrors.confirmPassword}</StyledError>

@@ -75,7 +75,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const Adminscreen = () => {
+const Adminscreen = ({updatePizzaInfo}) => {
   const [menuData, setMenuData] = useState([])
   const [ordersData, setOrdersData] = useState([])
   const [Loading, setLoading] = useState(true)
@@ -122,7 +122,6 @@ const Adminscreen = () => {
     };
   }, []);
 
-  
   const handleDeletePizza = async (pizzaId) => {
     try {
       const response = await axios.delete(`/api/menu/delete/${pizzaId}`);
@@ -191,10 +190,11 @@ const Adminscreen = () => {
   </StyledButton>
 </StyledTableCell>
 <StyledTableCell>
-  <UpdatePizzaModal
-    updatePizza={updatePizza}
-    pizzaToUpdate={menu}
-  />
+<UpdatePizzaModal
+  updatePizza={updatePizza}
+  pizzaToUpdate={menu}
+/>
+
 </StyledTableCell>
             </StyledTableRow>       
 )})}

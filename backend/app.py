@@ -179,13 +179,15 @@ def add_pizza():
     countInStock = request.form['countInStock']
 
     image_file = request.files.get('image')
+    filename = None  # Set a default value for filename
+
     if image_file:
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         image_file.save(image_path)
         relative_image_path = f"/{filename}"
     else:
-        relative_image_path = f"/{filename}"
+        relative_image_path = f"/default_image.jpg"  # Provide a default image path if no image is uploaded
 
     new_pizza = Menu(
         name=name,
@@ -213,7 +215,6 @@ def add_pizza():
         "countInStock": new_pizza.countInStock,
     }
     return jsonify(pizza_dict), 201
-
 
 @app.route('/api/menu/update/<int:id>', methods=['PUT'])
 def update_pizza(id):

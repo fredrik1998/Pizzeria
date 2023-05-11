@@ -20,29 +20,30 @@ background-color: #c8102e;
 `;
 
 const AddPizzaModal = ({addNewPizza}) => {
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState('');
-  const [size, setSize] = useState('');
-  const [toppings, setToppings] = useState('');
-  const [description, setDescription] = useState('');
-  const [countInStock, setCountInStock] = useState(0);
+  const [addPizzaInfo, setAddPizzaInfo] = useState({
+    name: '',
+    price: 0,
+    category: '',
+    size: '',
+    toppings: '',
+    description:'',
+    countInStock: 0,
+  })
   const [image, setImage] = useState('')
-
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
-      formData.append('name', name);
-      formData.append('category', category);
-      formData.append('size', size);
-      formData.append('toppings', toppings);
-      formData.append('description', description);
-      formData.append('price', price);
-      formData.append('countInStock', countInStock);
+      formData.append('name', addPizzaInfo.name);
+      formData.append('category', addPizzaInfo.category);
+      formData.append('size', addPizzaInfo.size);
+      formData.append('toppings', addPizzaInfo.toppings);
+      formData.append('description', addPizzaInfo.description);
+      formData.append('price', addPizzaInfo.price);
+      formData.append('countInStock', addPizzaInfo.countInStock);
       formData.append('image', image);
   
       const response = await axios.post('/api/menu/add', formData, {
@@ -100,44 +101,51 @@ const AddPizzaModal = ({addNewPizza}) => {
           <h1>Create Pizza</h1>
           <TextField
             label="Name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={addPizzaInfo.name}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, name: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Price"
-            value={price}
-            onChange={(event) => setPrice(event.target.value)}
+            value={addPizzaInfo.price}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, price: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Category"
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
+            value={addPizzaInfo.category}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, category: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Size"
-            value={size}
-            onChange={(event) => setSize(event.target.value)}
+            value={addPizzaInfo.size}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, size: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Toppings"
-            value={toppings}
-            onChange={(event) => setToppings(event.target.value)}
+            value={addPizzaInfo.toppings}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, toppings: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Description"
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
+            value={addPizzaInfo.description}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, description: event.target.value})}
             variant="outlined"
           />
           <TextField
             label="Count In Stock"
-            value={countInStock}
-            onChange={(event) => setCountInStock(event.target.value)}
+            value={addPizzaInfo.countInStock}
+            onChange={(event) =>
+            setAddPizzaInfo({...addPizzaInfo, countInStock: event.target.value})}
             variant="outlined"
           />
            <TextField

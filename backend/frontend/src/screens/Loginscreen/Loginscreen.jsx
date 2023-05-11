@@ -19,8 +19,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 
 const Loginscreen = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+   
     const [message, setMessage] = useState('')
     const {user, setUser} = useContext(UserContext)
     const {userId} = useParams()
@@ -30,18 +29,23 @@ const Loginscreen = () => {
     const [formErrors, setFormErrors] = useState({
         email: '',
         password: '',
-    })
+    });
+
+    const [loginInfo, setLoginInfo] = useState({
+      email : '',
+      password: '',
+    });
 
     const submitHandler = async (event) => {
         event.preventDefault();
       
         const errors = {};
       
-        if (!email) {
+        if (!loginInfo.email) {
           errors.email = 'Email is required';
         }
       
-        if (!password) {
+        if (!loginInfo.email) {
           errors.password = 'Password is required';
         }
       
@@ -50,8 +54,8 @@ const Loginscreen = () => {
         if (Object.keys(errors).length === 0) {
           try {
             const response = await axios.post('/api/login', {
-              username: email,
-              password: password,
+              username: loginInfo.email,
+              password: loginInfo.password,
             });
             console.log('Server response:', response.data);
       
@@ -96,7 +100,9 @@ const Loginscreen = () => {
           <StyledLabel>Email or Username</StyledLabel>
           <StyledInput 
           type='text'
-          onChange={(e) => setEmail(e.target.value)}
+          value={loginInfo.email}
+          onChange={(e) => 
+          setLoginInfo({...loginInfo, email: e.target.value})}
           id='email'
           placeholder='eg. hello@gmail.com'
           >
@@ -106,7 +112,9 @@ const Loginscreen = () => {
           <StyledInput 
           type='password'
           id='password'
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginInfo.password}
+          onChange={(e) => 
+          setLoginInfo({...loginInfo, password: e.target.value})}
           >
           </StyledInput>
           <StyledError>{formErrors.password}</StyledError>
