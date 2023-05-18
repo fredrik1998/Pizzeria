@@ -1,13 +1,28 @@
-import React, { useContext, useMemo, useState } from 'react';
-import { Box, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FaShoppingBasket } from 'react-icons/fa';
-import { CartContext } from '../../CartContext';
-import { UserContext } from '../../UserContext';
-import { useNavigate } from 'react-router-dom';
-import { StyledHeader, StyledImg, StyledLink, StyledLinkOrder, StyledSeperator, StyledCart, StyledSpan, StyledButton } from './HeaderElements';
+import React, { useContext, useMemo, useState } from "react";
+import {
+  Box,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { FaShoppingBasket } from "react-icons/fa";
+import { CartContext } from "../../CartContext";
+import { UserContext } from "../../UserContext";
+import { useNavigate } from "react-router-dom";
+import {
+  StyledHeader,
+  StyledImg,
+  StyledLink,
+  StyledLinkOrder,
+  StyledSeperator,
+  StyledCart,
+  StyledSpan,
+  StyledButton,
+} from "./HeaderElements";
 
-import img from '../../../public/pizzaicon.png';
+import img from "../../../public/pizzaicon.png";
 
 const Header = () => {
   const { cartItems } = useContext(CartContext);
@@ -20,13 +35,13 @@ const Header = () => {
   }, [cartItems]);
 
   const handleLogout = () => {
-    localStorage.removeItem('access_token');
+    localStorage.removeItem("access_token");
     setUser(null);
-    navigate('/');
+    navigate("/");
   };
 
   const renderCart = () => {
-    if (location === '/order') {
+    if (location === "/order") {
       return (
         <StyledCart>
           <FaShoppingBasket />
@@ -38,33 +53,27 @@ const Header = () => {
   };
 
   const renderOrderLink = () => {
-    if (location === '/menu') {
-      return (
-        <StyledLinkOrder to="/order">
-          Order here
-        </StyledLinkOrder>
-      );
+    if (location === "/menu") {
+      return <StyledLinkOrder to="/order">Order here</StyledLinkOrder>;
     }
     return null;
   };
 
   const renderUserPanel = () => {
-    if (user && location === '/admin') {
+    if (user && location === "/admin") {
       return (
-        <Box sx={{ marginTop: '10px' }}>
-          <Accordion style={{ background: 'none', boxShadow: 'none' }}>
+        <Box sx={{ marginTop: "10px" }}>
+          <Accordion style={{ background: "none", boxShadow: "none" }}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls="user-panel-content"
               id="user-panel-header"
-              style={{ background: 'none' }}
+              style={{ background: "none" }}
             >
               <Typography>{user.username}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <StyledButton onClick={handleLogout}>
-                Logout
-              </StyledButton>
+              <StyledButton onClick={handleLogout}>Logout</StyledButton>
             </AccordionDetails>
           </Accordion>
         </Box>

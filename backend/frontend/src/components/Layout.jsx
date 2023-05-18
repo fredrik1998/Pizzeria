@@ -8,7 +8,7 @@ const Layout = ({ children }) => (
     transition={{
       type: "spring",
       bounce: 0.5,
-      velocity: 1
+      velocity: 1,
     }}
   >
     {children}

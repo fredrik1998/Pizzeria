@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export const StyledWrapper = styled.main`
   height: 100%;
   width: 100%;
-  font-family: 'League Spartan', sans-serif;
+  font-family: "League Spartan", sans-serif;
   overflow-x: hidden;
 `;
 
@@ -18,19 +18,19 @@ export const StyledButton = styled.button`
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  @media screen and (max-width: 767px){
-    width: 50px
+  @media screen and (max-width: 767px) {
+    width: 50px;
   }
 `;
 
 export const StyledH1 = styled.h1`
-margin-top: 20px;
-margin-bottom: 20px;
-margin-left: 20px
-`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+`;
 export const StyledLink = styled(Link)`
-text-decoration: none;
-font-size: 16px;
-color: #121212;
-font-weight: 700;
-`
+  text-decoration: none;
+  font-size: 16px;
+  color: #121212;
+  font-weight: 700;
+`;

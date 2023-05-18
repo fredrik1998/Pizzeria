@@ -1,38 +1,43 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useStripe, useElements, CardElement, PaymentElement} from '@stripe/react-stripe-js';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  useStripe,
+  useElements,
+  CardElement,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
+import styled from "styled-components";
 
 const StyledForm = styled.form`
-display: flex;
-flex-direction: column;
-margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 30px;
 `;
 
 const StyledLabel = styled.label`
-font-size: 16px;
-margin-bottom: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
 `;
 
 const StyledButton = styled.button`
-font-size: 16px;
-border-radius: 4px;
-width: 100%;
-margin: 0 auto;
-font-weight: 700;
-letter-spacing: 0.1rem;
-padding: 10px;
-border: none;
-color: #fafafa;
-padding: 20px;
-margin-top: 20px;
-margin-bottom: 20px;
-background-color: #c8102e;
-border: 2px solid #c8102e;
-cursor: pointer;
+  font-size: 16px;
+  border-radius: 4px;
+  width: 100%;
+  margin: 0 auto;
+  font-weight: 700;
+  letter-spacing: 0.1rem;
+  padding: 10px;
+  border: none;
+  color: #fafafa;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #c8102e;
+  border: 2px solid #c8102e;
+  cursor: pointer;
 `;
 
-const CheckoutForm = ({orderId}) => {
+const CheckoutForm = ({ orderId }) => {
   const [error, setError] = useState(null);
   const [succeeded, setSucceeded] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -47,25 +52,25 @@ const CheckoutForm = ({orderId}) => {
     if (!stripe || !elements) {
       return;
     }
-  
+
     setProcessing(true);
-    const {error, paymentIntent} = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/success/${orderId}`
-      },   
+        return_url: `${window.location.origin}/success/${orderId}`,
+      },
     });
-   
+
     if (error) {
       setError(error.message);
       setProcessing(false);
-    } else if (paymentIntent.status === 'succeeded') {
+    } else if (paymentIntent.status === "succeeded") {
       setSucceeded(true);
       setProcessing(false);
-      navigate('/success')
+      navigate("/success");
     }
   };
-  
+
   const handleChange = (event) => {
     setDisabled(event.empty);
     setError(event.error ? event.error.message : null);
@@ -78,15 +83,13 @@ const CheckoutForm = ({orderId}) => {
       <PaymentElement onChange={handleChange} />
       {error && <p>{error}</p>}
       <StyledButton
-        type='submit'
+        type="submit"
         disabled={processing || disabled || succeeded}
       >
-        {processing ? 'Processing...' : 'Pay Now'}
+        {processing ? "Processing..." : "Pay Now"}
       </StyledButton>
-      {succeeded && (
-        <p>Payment succeeded!</p>
-      )}
+      {succeeded && <p>Payment succeeded!</p>}
     </StyledForm>
   );
 };
-export default CheckoutForm
+export default CheckoutForm;

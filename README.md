@@ -10,28 +10,22 @@ The React frontend provides a user-friendly interface for browsing the menu, sel
 
 ## Technologies
 
-* React
-* Python
-* Flask
-* Flask RESTful API
-* PostgresSQL
-* SQL Alchemy
-* Stripe
+- React
+- Python
+- Flask
+- Flask RESTful API
+- PostgresSQL
+- SQL Alchemy
+- Stripe
 
 ## What i have learned
 
-* Building modern web applications with React, including using React Router for client-side routing and styled-components for styling.
-* Integrating secure online payments using Stripe, including using Stripe Elements for building custom payment forms.
-* Building a RESTful API with Flask, including using Flask RESTful for building API endpoints and handling requests.
-* Developing server-side logic for order processing, payment authorization and user authorization using Python and Flask.
-* Managing application state and handling asynchronous actions using React hooks, including useState, useEffect, and useContext.
+- Building modern web applications with React, including using React Router for client-side routing and styled-components for styling.
+- Integrating secure online payments using Stripe, including using Stripe Elements for building custom payment forms.
+- Building a RESTful API with Flask, including using Flask RESTful for building API endpoints and handling requests.
+- Developing server-side logic for order processing, payment authorization and user authorization using Python and Flask.
+- Managing application state and handling asynchronous actions using React hooks, including useState, useEffect, and useContext.
 
 ## Author
+
 Fredrik Andrén
-
-
-
-
-
-
-

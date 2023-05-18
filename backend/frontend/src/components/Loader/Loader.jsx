@@ -35,21 +35,9 @@ const Loader = () => {
 
   return (
     <motion.div style={container}>
-      <motion.span
-        style={dot}
-        variants={dotVariants(0)}
-        animate="animate"
-      />
-      <motion.span
-        style={dot}
-        variants={dotVariants(0.2)}
-        animate="animate"
-      />
-      <motion.span
-        style={dot}
-        variants={dotVariants(0.4)}
-        animate="animate"
-      />
+      <motion.span style={dot} variants={dotVariants(0)} animate="animate" />
+      <motion.span style={dot} variants={dotVariants(0.2)} animate="animate" />
+      <motion.span style={dot} variants={dotVariants(0.4)} animate="animate" />
     </motion.div>
   );
 };
